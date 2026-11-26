@@ -14,7 +14,7 @@
   --warn:#b45309; --warn-soft:#fef6e7;
   /* Topic colours – one per subject */
   --sql:#3457d5;     --sql-soft:#eef1fc;      /* SQL: brand blue  */
-  --powerbi:#b7791f; --powerbi-soft:#fdf5e0;  /* Power BI: gold   */
+  --powerbi:#975a16; --powerbi-soft:#fdf5e0;  /* Power BI: gold (5.1:1 on soft bg) */
   --excel:#15803d;   --excel-soft:#ecf8f0;    /* Excel: green     */
   --dax:#7c3aed;     --dax-soft:#f3eefe;      /* DAX: purple      */
   --model:#0f766e;   --model-soft:#e6f6f4;    /* Data modelling: teal */

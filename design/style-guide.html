@@ -39,7 +39,7 @@ h2.s{margin-bottom:.4rem}.sub{color:var(--text-muted);margin-bottom:1.75rem}
   <div class="question" data-topic="sql">
     <div class="question__head"><span class="tag tag--topic">SQL</span><span class="level level--medium">Medium</span><span class="question__num">#07</span></div>
     <h3>Which customers have never placed an order?</h3>
-    <pre class="code"><div class="code__bar"><i></i><i></i><i></i>&nbsp;query.sql</div><span class="c">-- customers(id, name)   orders(id, customer_id, total)</span>
+    <pre class="code"><span class="code__bar"><i></i><i></i><i></i>&nbsp;query.sql</span><span class="c">-- customers(id, name)   orders(id, customer_id, total)</span>
 <span class="k">SELECT</span> c.name
 <span class="k">FROM</span> customers c
 <span class="k">LEFT JOIN</span> orders o <span class="k">ON</span> o.customer_id = c.id
@@ -77,7 +77,7 @@ Sales LY = <span class="f">CALCULATE</span>(
     <span class="f">SUM</span>( Sales[Amount] ),
     <span class="f">SAMEPERIODLASTYEAR</span>( <span class="s">'Date'</span>[Date] )
 )</pre>
-    <div class="progress-label"><span>Progress</span><span>3 / 40</span></div><div class="progress" style="--value:8%"><span style="--value:8%"></span></div>
+    <div class="progress-label"><span>Progress</span><span>3 / 40</span></div><div class="progress"><span style="--value:8%"></span></div>
   </div>
 </div></section>
 <section class="section section--alt"><div class="container">
@@ -91,7 +91,8 @@ Sales LY = <span class="f">CALCULATE</span>(
     <div><i style="background:var(--border)"></i><span><b>Border</b>#E6E9F0</span></div>
     <div><i style="background:var(--success)"></i><span><b>Success</b>#15803D</span></div>
     <div><i style="background:var(--error)"></i><span><b>Error</b>#B91C1C</span></div>
-    <div><i style="background:var(--powerbi)"></i><span><b>Power BI</b>#B7791F</span></div>
+    <div><i style="background:var(--sql)"></i><span><b>SQL</b>#3457D5</span></div>
+    <div><i style="background:var(--powerbi)"></i><span><b>Power BI</b>#975A16</span></div>
     <div><i style="background:var(--excel)"></i><span><b>Excel</b>#15803D</span></div>
     <div><i style="background:var(--dax)"></i><span><b>DAX</b>#7C3AED</span></div>
     <div><i style="background:var(--model)"></i><span><b>Modelling</b>#0F766E</span></div>
