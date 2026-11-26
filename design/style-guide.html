@@ -1,0 +1,108 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Code Corner – Style Guide</title>
+<link rel="stylesheet" href="tokens.css"><link rel="stylesheet" href="components.css">
+<style>
+.sw{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.9rem}
+.sw div{border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;font:500 .75rem var(--font-mono);background:#fff}
+.sw i{display:block;height:56px}.sw span{display:block;padding:.5rem .65rem;color:var(--text-muted)}.sw b{color:var(--text);display:block}
+.grid3{display:grid;gap:1.25rem;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.row{display:flex;flex-wrap:wrap;gap:.75rem;align-items:center}
+.nav{display:flex;justify-content:space-between;align-items:center;padding:1rem 0}
+.logo{font:600 1.15rem var(--font-heading);letter-spacing:-.02em}.logo b{color:var(--accent)}
+.hero{padding-block:clamp(2.5rem,7vw,5rem)}.hero p{max-width:56ch;color:var(--text-muted);margin:1rem 0 1.75rem}
+h2.s{margin-bottom:.4rem}.sub{color:var(--text-muted);margin-bottom:1.75rem}
+</style></head><body>
+<header class="container nav"><a class="logo" href="#">The Code<b>Corner</b></a><span class="tag">style guide v1</span></header>
+
+<section class="container hero">
+  <span class="eyebrow">Practice site</span>
+  <h1 style="margin-top:.6rem">Learn by doing.<br>Practise <span class="accent">SQL</span>, Power BI, Excel, DAX &amp; data modelling.</h1>
+  <p>Short, hands-on questions with instant feedback. Pick a topic, write the query, check your answer, level up.</p>
+  <div class="row"><a class="btn btn--primary" href="#">Start practising</a><a class="btn btn--ghost" href="#">Browse topics</a></div>
+</section>
+
+<section class="section section--alt"><div class="container">
+  <span class="eyebrow">Topics</span><h2 class="s">Choose what to practise</h2><p class="sub">Each subject gets its own accent colour via <code class="inline">data-topic</code>.</p>
+  <div class="grid3">
+    <article class="card card--hover topic-card" data-topic="sql"><span class="icon-box">SQL</span><h3>SQL</h3><p style="color:var(--text-muted)">SELECT, JOIN, GROUP BY and window functions on real-looking tables.</p><div class="progress"><span style="--value:62%"></span></div><div class="topic-card__meta"><span>31 / 50 done</span><span>Beginner → Hard</span></div></article>
+    <article class="card card--hover topic-card" data-topic="powerbi"><span class="icon-box">BI</span><h3>Power BI</h3><p style="color:var(--text-muted)">DAX measures, data modelling and building clear dashboards.</p><div class="progress"><span style="--value:28%"></span></div><div class="topic-card__meta"><span>14 / 50 done</span><span>Beginner → Hard</span></div></article>
+    <article class="card card--hover topic-card" data-topic="excel"><span class="icon-box">XL</span><h3>Excel</h3><p style="color:var(--text-muted)">Formulas, lookups, pivot tables and cleaning messy data.</p><div class="progress"><span style="--value:45%"></span></div><div class="topic-card__meta"><span>18 / 40 done</span><span>Beginner → Hard</span></div></article>
+    <article class="card card--hover topic-card" data-topic="dax"><span class="icon-box">fx</span><h3>DAX</h3><p style="color:var(--text-muted)">Measures, CALCULATE, filter context and time intelligence.</p><div class="progress"><span style="--value:15%"></span></div><div class="topic-card__meta"><span>6 / 40 done</span><span>Medium → Hard</span></div></article>
+    <article class="card card--hover topic-card" data-topic="model"><span class="icon-box">⛁</span><h3>Data modelling</h3><p style="color:var(--text-muted)">Star schemas, relationships, keys and cardinality.</p><div class="progress"><span style="--value:0%"></span></div><div class="topic-card__meta"><span>0 / 30 done</span><span>Coming soon</span></div></article>
+  </div>
+</div></section>
+
+<section class="section"><div class="container" style="max-width:820px">
+  <span class="eyebrow">Question</span><h2 class="s">Question card</h2><p class="sub">Code block, answer options and feedback states.</p>
+  <div class="progress-label" data-topic="sql"><span>SQL · Joins</span><span>Question 7 of 20</span></div>
+  <div class="progress" data-topic="sql" style="margin-bottom:1.25rem"><span style="--value:35%"></span></div>
+  <div class="question" data-topic="sql">
+    <div class="question__head"><span class="tag tag--topic">SQL</span><span class="level level--medium">Medium</span><span class="question__num">#07</span></div>
+    <h3>Which customers have never placed an order?</h3>
+    <pre class="code"><div class="code__bar"><i></i><i></i><i></i>&nbsp;query.sql</div><span class="c">-- customers(id, name)   orders(id, customer_id, total)</span>
+<span class="k">SELECT</span> c.name
+<span class="k">FROM</span> customers c
+<span class="k">LEFT JOIN</span> orders o <span class="k">ON</span> o.customer_id = c.id
+<span class="k">WHERE</span> o.id <span class="k">IS NULL</span>;</pre>
+    <ul class="options">
+      <li><button class="option" aria-pressed="false"><span class="option__key">A</span>INNER JOIN with WHERE o.id IS NULL</button></li>
+      <li><button class="option" aria-pressed="true"><span class="option__key">B</span>LEFT JOIN with WHERE o.id IS NULL</button></li>
+      <li><button class="option is-correct"><span class="option__key">C</span>LEFT JOIN with WHERE o.id IS NULL (correct state)</button></li>
+      <li><button class="option is-wrong"><span class="option__key">D</span>CROSS JOIN (wrong state)</button></li>
+    </ul>
+    <div class="callout callout--success" style="margin-bottom:.75rem"><strong>Correct.</strong> A LEFT JOIN keeps every customer; unmatched rows have NULL order columns.</div>
+    <div class="callout callout--error" style="margin-bottom:.75rem"><strong>Not quite.</strong> An INNER JOIN drops customers with no orders, so it can't find them.</div>
+    <div class="callout callout--hint"><strong>Hint.</strong> Which join keeps rows that have no match?</div>
+    <div class="row" style="margin-top:1.25rem"><button class="btn btn--ghost btn--sm">Show hint</button><button class="btn btn--primary btn--sm">Check answer</button></div>
+  </div>
+</div></section>
+
+<section class="section section--alt"><div class="container" style="max-width:820px">
+  <span class="eyebrow">Practice</span><h2 class="s">Editor &amp; result table</h2><p class="sub" >For write-your-own-query exercises.</p>
+  <textarea class="editor" spellcheck="false">SELECT department, COUNT(*) AS staff
+FROM employees
+GROUP BY department;</textarea>
+  <div class="row" style="margin:1rem 0"><button class="btn btn--primary btn--sm">Run query</button><button class="btn btn--ghost btn--sm">Reset</button></div>
+  <div class="table-wrap"><table class="data"><thead><tr><th>department</th><th>staff</th></tr></thead><tbody><tr><td>Finance</td><td>12</td></tr><tr><td>Marketing</td><td>8</td></tr><tr><td>IT</td><td>21</td></tr></tbody></table></div>
+  <div class="grid3" style="margin-top:2rem"><div class="card stat" data-topic="sql"><b>82%</b><span>Accuracy</span></div><div class="card stat" data-topic="powerbi"><b>17</b><span>Day streak</span></div><div class="card stat" data-topic="excel"><b>45</b><span>Solved</span></div></div>
+</div></section>
+
+<section class="section"><div class="container" style="max-width:820px">
+  <span class="eyebrow">DAX question</span><h2 class="s">Same card, different topic</h2><p class="sub">Swap <code class="inline">data-topic</code> and the whole card recolours.</p>
+  <div class="question" data-topic="dax">
+    <div class="question__head"><span class="tag tag--topic">DAX</span><span class="level level--hard">Hard</span><span class="question__num">#03</span></div>
+    <h3>Which measure returns total sales for the same period last year?</h3>
+    <pre class="code"><span class="c">// Sales[Amount], 'Date'[Date]</span>
+Sales LY = <span class="f">CALCULATE</span>(
+    <span class="f">SUM</span>( Sales[Amount] ),
+    <span class="f">SAMEPERIODLASTYEAR</span>( <span class="s">'Date'</span>[Date] )
+)</pre>
+    <div class="progress-label"><span>Progress</span><span>3 / 40</span></div><div class="progress" style="--value:8%"><span style="--value:8%"></span></div>
+  </div>
+</div></section>
+<section class="section section--alt"><div class="container">
+  <span class="eyebrow">Foundations</span><h2 class="s">Colour &amp; type</h2><p class="sub">Same tokens as onckekim.site.</p>
+  <div class="sw">
+    <div><i style="background:var(--accent)"></i><span><b>Accent</b>#3457D5</span></div>
+    <div><i style="background:var(--accent-soft)"></i><span><b>Accent soft</b>#EEF1FC</span></div>
+    <div><i style="background:var(--text)"></i><span><b>Text</b>#0F172A</span></div>
+    <div><i style="background:var(--text-muted)"></i><span><b>Muted</b>#5B6478</span></div>
+    <div><i style="background:var(--bg-alt)"></i><span><b>Alt bg</b>#F6F7FB</span></div>
+    <div><i style="background:var(--border)"></i><span><b>Border</b>#E6E9F0</span></div>
+    <div><i style="background:var(--success)"></i><span><b>Success</b>#15803D</span></div>
+    <div><i style="background:var(--error)"></i><span><b>Error</b>#B91C1C</span></div>
+    <div><i style="background:var(--powerbi)"></i><span><b>Power BI</b>#B7791F</span></div>
+    <div><i style="background:var(--excel)"></i><span><b>Excel</b>#15803D</span></div>
+    <div><i style="background:var(--dax)"></i><span><b>DAX</b>#7C3AED</span></div>
+    <div><i style="background:var(--model)"></i><span><b>Modelling</b>#0F766E</span></div>
+    <div><i style="background:var(--code-bg)"></i><span><b>Code bg</b>#0F172A</span></div>
+  </div>
+  <div style="margin-top:2rem;display:grid;gap:.6rem">
+    <div style="font:600 2.2rem var(--font-heading);letter-spacing:-.03em">Space Grotesk – headings</div>
+    <div>Inter – body text, buttons and UI. Clear and readable at every size.</div>
+    <div style="font:500 .95rem var(--font-mono);color:var(--text-muted)">JetBrains Mono – code, labels, tags, numbers</div>
+    <div class="row"><span class="tag">SELECT</span><span class="tag">DAX</span><span class="tag tag--topic" data-topic="powerbi">Power BI</span><span class="tag tag--topic" data-topic="excel">Excel</span><span class="tag tag--topic" data-topic="dax">DAX</span><span class="tag tag--topic" data-topic="model">Data modelling</span><span class="level level--easy">Easy</span><span class="level level--medium">Medium</span><span class="level level--hard">Hard</span></div>
+  </div>
+</div></section>
+<footer class="container" style="padding-block:2rem;color:var(--text-subtle);font:.8rem var(--font-mono)">© The Code Corner</footer>
+</body></html>

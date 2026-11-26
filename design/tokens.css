@@ -1,0 +1,50 @@
+/* The Code Corner – design tokens (taken from onckekim.site) */
+@font-face{font-family:'Space Grotesk Variable';font-weight:300 700;font-display:swap;src:url('fonts/space-grotesk-latin.woff2') format('woff2')}
+@font-face{font-family:'Inter Variable';font-weight:100 900;font-display:swap;src:url('fonts/inter-latin.woff2') format('woff2')}
+@font-face{font-family:'JetBrains Mono Variable';font-weight:100 800;font-display:swap;src:url('fonts/jetbrains-mono-latin.woff2') format('woff2')}
+
+:root{
+  /* Brand */
+  --accent:#3457d5; --accent-hover:#2a48b8; --accent-soft:#eef1fc; --accent-ring:rgba(52,87,213,.25);
+  /* Surfaces & text */
+  --bg:#fff; --bg-alt:#f6f7fb; --surface:#fff; --border:#e6e9f0; --border-strong:#d5dae6;
+  --text:#0f172a; --text-muted:#5b6478; --text-subtle:#6b7385;
+  /* Feedback (quiz states) */
+  --success:#15803d; --success-soft:#ecf8f0; --error:#b91c1c; --error-soft:#fdeeee;
+  --warn:#b45309; --warn-soft:#fef6e7;
+  /* Topic colours – one per subject */
+  --sql:#3457d5;     --sql-soft:#eef1fc;      /* SQL: brand blue  */
+  --powerbi:#b7791f; --powerbi-soft:#fdf5e0;  /* Power BI: gold   */
+  --excel:#15803d;   --excel-soft:#ecf8f0;    /* Excel: green     */
+  --dax:#7c3aed;     --dax-soft:#f3eefe;      /* DAX: purple      */
+  --model:#0f766e;   --model-soft:#e6f6f4;    /* Data modelling: teal */
+  /* Code block (dark) */
+  --code-bg:#0f172a; --code-text:#e6e9f0; --code-muted:#8b95ab;
+  --tok-keyword:#8fa8ff; --tok-string:#7ee0a1; --tok-number:#f5c26b; --tok-fn:#c4a7ff; --tok-comment:#7a8499;
+  /* Type */
+  --font-heading:'Space Grotesk Variable','Space Grotesk',ui-sans-serif,system-ui,sans-serif;
+  --font-body:'Inter Variable','Inter',ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;
+  --font-mono:'JetBrains Mono Variable','JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  /* Shape, depth, motion, layout */
+  --radius-sm:8px; --radius:14px; --radius-lg:20px;
+  --shadow-sm:0 1px 2px rgba(15,23,42,.04),0 1px 3px rgba(15,23,42,.06);
+  --shadow:0 4px 12px rgba(15,23,42,.06),0 1px 3px rgba(15,23,42,.04);
+  --shadow-lg:0 18px 40px -12px rgba(52,87,213,.18),0 4px 12px rgba(15,23,42,.06);
+  --container:1140px; --gutter:clamp(1rem,4vw,2.5rem); --section-y:clamp(3rem,8vw,6rem);
+  --ease:cubic-bezier(.22,1,.36,1); --t-fast:180ms; --t:300ms;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;font-family:var(--font-body);font-size:clamp(.95rem,.9rem + .25vw,1.0625rem);line-height:1.65;color:var(--text);background:var(--bg);-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--font-heading);font-weight:600;line-height:1.15;letter-spacing:-.02em;margin:0;text-wrap:balance}
+h1{font-size:clamp(2rem,1.3rem + 3.5vw,3.75rem);letter-spacing:-.03em}
+h2{font-size:clamp(1.6rem,1.2rem + 2vw,2.5rem)}
+h3{font-size:clamp(1.1rem,1rem + .5vw,1.25rem)}
+p{margin:0;text-wrap:pretty}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+.container{width:100%;max-width:var(--container);margin-inline:auto;padding-inline:var(--gutter)}
+.section{padding-block:var(--section-y)} .section--alt{background:var(--bg-alt)}
+.eyebrow{font-family:var(--font-mono);font-size:.78rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.accent{color:var(--accent)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}

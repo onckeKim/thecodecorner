@@ -1,0 +1,80 @@
+/* The Code Corner – components for a practice / quiz site. Needs tokens.css */
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;min-height:48px;padding:.85rem 1.5rem;border-radius:var(--radius-sm);border:1px solid transparent;font:600 .95rem/1 var(--font-body);cursor:pointer;white-space:nowrap;transition:background-color var(--t-fast) ease,color var(--t-fast) ease,border-color var(--t-fast) ease,transform var(--t-fast) ease,box-shadow var(--t-fast) ease}
+.btn--primary{background:var(--accent);color:#fff;box-shadow:0 6px 16px -6px rgba(52,87,213,.6)}
+.btn--primary:hover{background:var(--accent-hover);transform:translateY(-1px);box-shadow:0 10px 22px -8px rgba(52,87,213,.7)}
+.btn--ghost{background:var(--surface);color:var(--text);border-color:var(--border-strong)}
+.btn--ghost:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-1px)}
+.btn--sm{min-height:44px;padding:.6rem 1.1rem;font-size:.875rem}
+.btn:active{transform:scale(.98);transition-duration:80ms}
+.btn[disabled]{opacity:.6;cursor:not-allowed;transform:none}
+
+/* Card */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.75rem;box-shadow:var(--shadow-sm);transition:transform var(--t) var(--ease),box-shadow var(--t) var(--ease),border-color var(--t) var(--ease)}
+.card--hover:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);border-color:rgba(52,87,213,.35)}
+
+/* Topic theming: add data-topic="sql|powerbi|excel|dax|model" to any element */
+[data-topic=sql]{--tc:var(--sql);--tc-soft:var(--sql-soft)}
+[data-topic=powerbi]{--tc:var(--powerbi);--tc-soft:var(--powerbi-soft)}
+[data-topic=excel]{--tc:var(--excel);--tc-soft:var(--excel-soft)}
+[data-topic=dax]{--tc:var(--dax);--tc-soft:var(--dax-soft)}
+[data-topic=model]{--tc:var(--model);--tc-soft:var(--model-soft)}
+.topic-card{display:flex;flex-direction:column;gap:.9rem;border-top:3px solid var(--tc,var(--accent))}
+.topic-card .icon-box{background:var(--tc-soft,var(--accent-soft));color:var(--tc,var(--accent))}
+.topic-card:hover .icon-box{background:var(--tc);color:#fff}
+.icon-box{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:12px;font:600 .9rem var(--font-mono);transition:background-color var(--t) ease,color var(--t) ease}
+.topic-card__meta{margin-top:auto;display:flex;justify-content:space-between;align-items:center;font:500 .78rem var(--font-mono);color:var(--text-subtle)}
+
+/* Tags & level badges */
+.tag{display:inline-flex;align-items:center;padding:.3rem .65rem;border-radius:6px;background:var(--bg-alt);border:1px solid var(--border);font:500 .75rem var(--font-mono);color:var(--text-muted);white-space:nowrap}
+.tag--topic{background:var(--tc-soft);border-color:transparent;color:var(--tc)}
+.level{font:600 .72rem var(--font-mono);padding:.25rem .55rem;border-radius:999px;letter-spacing:.04em;text-transform:uppercase}
+.level--easy{background:var(--success-soft);color:var(--success)} .level--medium{background:var(--warn-soft);color:var(--warn)} .level--hard{background:var(--error-soft);color:var(--error)}
+
+/* Progress */
+.progress{height:8px;background:var(--bg-alt);border:1px solid var(--border);border-radius:999px;overflow:hidden}
+.progress>span{display:block;height:100%;width:var(--value,0%);background:var(--tc,var(--accent));border-radius:999px;transition:width var(--t) var(--ease)}
+.progress-label{display:flex;justify-content:space-between;font:500 .8rem var(--font-mono);color:var(--text-muted);margin-bottom:.4rem}
+
+/* Question card */
+.question{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:clamp(1.25rem,3vw,2rem);box-shadow:var(--shadow)}
+.question__head{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;margin-bottom:1rem}
+.question__num{font:500 .8rem var(--font-mono);color:var(--text-subtle);margin-left:auto}
+.question h3{margin-bottom:1rem}
+
+/* Code block / editor */
+.code{background:var(--code-bg);color:var(--code-text);border-radius:var(--radius);padding:1rem 1.25rem;font:400 .875rem/1.7 var(--font-mono);overflow-x:auto;margin:0 0 1.25rem}
+.code__bar{display:flex;gap:.4rem;align-items:center;margin:-.25rem 0 .75rem;font-size:.72rem;color:var(--code-muted)}
+.code__bar i{width:10px;height:10px;border-radius:50%;background:#2a3550;display:inline-block}
+.code .k{color:var(--tok-keyword)} .code .s{color:var(--tok-string)} .code .n{color:var(--tok-number)} .code .f{color:var(--tok-fn)} .code .c{color:var(--tok-comment);font-style:italic}
+code.inline{font:500 .85em var(--font-mono);background:var(--accent-soft);color:var(--accent);padding:.1em .4em;border-radius:5px}
+textarea.editor{width:100%;min-height:140px;background:var(--code-bg);color:var(--code-text);border:1px solid var(--border-strong);border-radius:var(--radius);padding:1rem;font:400 .875rem/1.7 var(--font-mono);resize:vertical}
+textarea.editor:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-ring)}
+
+/* Answer options */
+.options{display:grid;gap:.65rem;margin:0 0 1.25rem;padding:0;list-style:none}
+.option{display:flex;gap:.9rem;align-items:center;width:100%;text-align:left;background:var(--surface);border:1.5px solid var(--border-strong);border-radius:var(--radius-sm);padding:.85rem 1rem;font:500 .95rem var(--font-body);color:var(--text);cursor:pointer;transition:border-color var(--t-fast) ease,background-color var(--t-fast) ease,box-shadow var(--t-fast) ease}
+.option__key{flex:none;display:grid;place-items:center;width:28px;height:28px;border-radius:7px;background:var(--bg-alt);font:600 .8rem var(--font-mono);color:var(--text-muted)}
+.option:hover{border-color:var(--accent);background:var(--accent-soft)}
+.option[aria-pressed=true]{border-color:var(--accent);background:var(--accent-soft);box-shadow:0 0 0 3px var(--accent-ring)}
+.option[aria-pressed=true] .option__key{background:var(--accent);color:#fff}
+.option.is-correct{border-color:var(--success);background:var(--success-soft)} .option.is-correct .option__key{background:var(--success);color:#fff}
+.option.is-wrong{border-color:var(--error);background:var(--error-soft)} .option.is-wrong .option__key{background:var(--error);color:#fff}
+
+/* Feedback callouts */
+.callout{border-radius:var(--radius-sm);padding:.9rem 1.1rem;border-left:4px solid;font-size:.95rem}
+.callout strong{font-family:var(--font-heading)}
+.callout--success{background:var(--success-soft);border-color:var(--success)}
+.callout--error{background:var(--error-soft);border-color:var(--error)}
+.callout--hint{background:var(--accent-soft);border-color:var(--accent)}
+
+/* Tables (result sets / sample data) */
+.table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius-sm)}
+table.data{border-collapse:collapse;width:100%;font:400 .85rem var(--font-mono)}
+table.data th{background:var(--bg-alt);text-align:left;font-weight:600;color:var(--text-muted);padding:.55rem .9rem;border-bottom:1px solid var(--border-strong)}
+table.data td{padding:.5rem .9rem;border-bottom:1px solid var(--border)} table.data tr:last-child td{border-bottom:0}
+
+/* Score ring / stat */
+.stat{text-align:center}.stat b{display:block;font:600 2.25rem var(--font-heading);letter-spacing:-.03em;color:var(--tc,var(--accent))}.stat span{font:500 .78rem var(--font-mono);color:var(--text-subtle);text-transform:uppercase;letter-spacing:.06em}
+.check-list{list-style:none;padding:0;margin:0;display:grid;gap:.6rem;color:var(--text-muted);font-size:.95rem}
