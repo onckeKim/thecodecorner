@@ -223,7 +223,7 @@ create table public.lessons (
   summary           text,
   lesson_type       public.lesson_type not null default 'article',
   -- Ordered array of typed content blocks (validated by the application; see
-  -- src/server/curriculum/content.ts). Kept as JSON so an admin CMS can edit it.
+  -- src/lib/content/blocks.ts). Kept as JSON so an admin CMS can edit it.
   content           jsonb not null default '[]'::jsonb check (jsonb_typeof(content) = 'array'),
   video_url         text check (video_url is null or video_url ~ '^https://'),
   estimated_minutes integer check (estimated_minutes is null or estimated_minutes > 0),

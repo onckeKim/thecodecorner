@@ -93,13 +93,13 @@ export default async function LessonPage({ params }: Props) {
                 {activities.quizzes.map((q) => (
                   <li key={q.id} className="card flex flex-wrap items-center justify-between gap-3 p-4">
                     <span><b>Quiz:</b> {q.title} <span className="text-muted">· {pluralise(q.questionCount, "question")} · pass mark {q.passMark}%</span></span>
-                    <span className="tag">Interactive quizzes arrive in Phase 2</span>
+                    <span className="tag whitespace-normal">Interactive quizzes arrive in Phase 2</span>
                   </li>
                 ))}
                 {activities.exercises.map((e) => (
                   <li key={e.id} className="card flex flex-wrap items-center justify-between gap-3 p-4">
                     <span><b>Exercise:</b> {e.title} <span className="text-muted">· {e.type.toUpperCase()}</span></span>
-                    <span className="tag">Graded exercises arrive in a later phase</span>
+                    <span className="tag whitespace-normal">Graded exercises arrive in a later phase</span>
                   </li>
                 ))}
               </ul>

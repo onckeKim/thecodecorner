@@ -23,7 +23,7 @@ export function CourseCard({ pathSlug, course, index, state }: { pathSlug: strin
       {course.summary && <p className="text-muted">{course.summary}</p>}
       {state && !locked && <ProgressBar value={state.percent} theme={course.theme} label={state.status === "completed" ? "Completed" : "Progress"} detail={`${state.completedLessons} / ${state.totalLessons}`} />}
       {locked && (
-        <p className="tag self-start" role="note">
+        <p className="tag self-start whitespace-normal" role="note">
           Locked. Complete {state?.blockedBy.join(", ")} first.
         </p>
       )}
@@ -35,9 +35,9 @@ export function CourseCard({ pathSlug, course, index, state }: { pathSlug: strin
   );
 
   return locked ? (
-    <div className="card topic-card opacity-80" data-topic={course.theme ?? undefined} aria-disabled="true">{body}</div>
+    <div className="card topic-card min-w-0 opacity-80" data-topic={course.theme ?? undefined} aria-disabled="true">{body}</div>
   ) : (
-    <Link href={routes.learnCourse(pathSlug, course.slug)} className="card card--hover topic-card" data-topic={course.theme ?? undefined}>
+    <Link href={routes.learnCourse(pathSlug, course.slug)} className="card card--hover topic-card min-w-0" data-topic={course.theme ?? undefined}>
       {body}
     </Link>
   );

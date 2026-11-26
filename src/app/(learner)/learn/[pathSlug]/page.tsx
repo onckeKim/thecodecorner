@@ -26,7 +26,7 @@ export default async function LearnPathPage({ params }: Props) {
   return (
     <div className="site-container py-12">
       <Breadcrumbs items={[{ label: "Learn", href: routes.learn }, { label: path.title }]} />
-      <header className="mb-8 grid gap-5 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-end">
+      <header className="mb-8 grid gap-5 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-end [&>*]:min-w-0">
         <div>
           <span className="eyebrow">Learning path</span>
           <h1 className="mt-2 text-[clamp(2rem,1.4rem+2.4vw,2.9rem)]">{path.title}</h1>
@@ -36,7 +36,7 @@ export default async function LearnPathPage({ params }: Props) {
           <div className="card grid gap-4">
             <ProgressBar value={progress.percent} label="Path progress" detail={`${progress.completedLessons} / ${progress.totalLessons} lessons`} />
             {next ? (
-              <Link className="btn btn--primary" href={routes.lesson(path.slug, next.courseSlug, next.moduleSlug, next.lessonSlug)}>
+              <Link className="btn btn--primary whitespace-normal text-center leading-snug" href={routes.lesson(path.slug, next.courseSlug, next.moduleSlug, next.lessonSlug)}>
                 {progress.completedLessons ? "Continue" : "Start"}: {next.title}
               </Link>
             ) : (
@@ -61,7 +61,7 @@ export default async function LearnPathPage({ params }: Props) {
       {path.courses.length ? (
         <ol className="m-0 grid list-none gap-5 p-0 sm:grid-cols-2 lg:grid-cols-3">
           {path.courses.map((course, i) => (
-            <li key={course.id} className="grid">
+            <li key={course.id} className="grid min-w-0">
               <CourseCard pathSlug={path.slug} course={course} index={i + 1} state={canStudy ? progress.courses[course.id] : undefined} />
             </li>
           ))}

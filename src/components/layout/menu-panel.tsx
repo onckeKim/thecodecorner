@@ -47,7 +47,7 @@ export function MenuPanel({
     <div ref={ref} className={`relative ${className ?? ""}`}>
       <button
         type="button"
-        className="icon-btn w-auto gap-2 px-3"
+        className="icon-btn inline-flex w-auto items-center gap-2 px-3"
         aria-expanded={isOpen}
         aria-controls={id}
         aria-label={label}

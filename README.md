@@ -44,7 +44,8 @@ On Vercel, add the three variables under Project → Settings → Environment Va
 
 1. **Apply the schema.** Either:
    - CLI: `npx supabase link --project-ref <ref>` then `npx supabase db push`, or
-   - Dashboard → SQL Editor: run `supabase/migrations/20261126120000_platform_foundation.sql`.
+   - Dashboard → SQL Editor: run each file in `supabase/migrations/` in order.
+   (Already applied to the `thecodecorner` project, together with the seed.)
 2. **Load the demo curriculum** (development only): run `supabase/seed.sql` in the SQL Editor.
    It's safe to re-run. It switches prerequisites **off** so every course can be tested.
 3. **Auth settings** (Dashboard → Authentication):
@@ -52,6 +53,10 @@ On Vercel, add the three variables under Project → Settings → Environment Va
      and `https://<your-domain>/auth/confirm`.
    - Providers → Email: enabled. "Confirm email" can stay on (users get a link that lands on
      `/auth/confirm`) or be turned off for quicker local testing.
+   - **Email delivery:** Supabase's built-in mailer only sends to your project team's addresses
+     and allows a few emails per hour, so sign-ups from anyone else fail. Before real users
+     register, set up custom SMTP (Authentication → Emails → SMTP settings, e.g. Resend,
+     Postmark or SES), or turn "Confirm email" off while developing.
 4. **Make yourself an admin** after registering through the site:
    ```sql
    insert into public.user_roles (user_id, role_id)

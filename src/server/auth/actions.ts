@@ -68,7 +68,15 @@ export async function signUp(_prev: FormState<SignUpField>, formData: FormData):
       return { status: "error", fieldErrors: { password: error.message }, message: "Please choose a stronger password." };
     }
     if (error.code === "over_email_send_rate_limit" || error.status === 429) {
-      return { status: "error", message: "Too many attempts. Please wait a minute and try again." };
+      return { status: "error", message: "Too many sign-up attempts right now. Please wait a few minutes and try again." };
+    }
+    if (error.code === "email_address_invalid") {
+      return { status: "error", fieldErrors: { email: "This email address can’t be used. Please try another." }, message: "Please use a different email address." };
+    }
+    // Server-side log for operators (no password or personal data).
+    console.error("[auth] sign-up failed", { code: error.code, status: error.status, message: error.message });
+    if (/confirmation email|sending email|smtp/i.test(error.message)) {
+      return { status: "error", message: "We couldn’t send your confirmation email. Please try again later." };
     }
     return { status: "error", message: "We couldn’t create your account. Please try again." };
   }
