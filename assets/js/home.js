@@ -23,23 +23,31 @@
     document.getElementById('start-btn').href = 'practice.html?topic=' + (nextTopic || TCC.TOPICS[0].id);
   }
 
+  function renderLab() {
+    var ids = TCC.itemIds('sqllab');
+    var solved = TCC.progress('sqllab').solved.filter(function (id) { return ids.indexOf(id) !== -1; }).length;
+    document.getElementById('lab-progress-text').textContent = solved + ' / ' + ids.length + ' solved';
+    document.getElementById('lab-progress-bar').style.setProperty('--value', (ids.length ? Math.round(solved / ids.length * 100) : 0) + '%');
+  }
+
   function renderStats() {
     var s = TCC.stats();
     document.getElementById('stat-accuracy').textContent = s.accuracy === null ? '–' : s.accuracy + '%';
     document.getElementById('stat-streak').textContent = s.streak;
     document.getElementById('stat-solved').textContent = s.solved;
-    var total = TCC.TOPICS.reduce(function (n, t) { return n + (TCC.QUESTIONS[t.id] || []).length; }, 0);
+    var total = TCC.TOPICS.reduce(function (n, t) { return n + (TCC.QUESTIONS[t.id] || []).length; }, 0) + TCC.itemIds('sqllab').length;
     document.getElementById('stats-note').textContent = s.accuracy === null
       ? 'Answer a few questions and your stats will show up here.'
-      : 'You’ve solved ' + s.solved + ' of ' + total + ' questions. Accuracy counts every answer you’ve checked.';
+      : 'You’ve solved ' + s.solved + ' of ' + total + ' questions and exercises. Accuracy counts every answer you’ve checked.';
   }
 
   document.getElementById('reset-progress').addEventListener('click', function () {
-    if (confirm('Reset all your saved progress in this browser?')) { TCC.reset(); renderTopics(); renderStats(); }
+    if (confirm('Reset all your saved progress in this browser?')) { TCC.reset(); renderTopics(); renderLab(); renderStats(); }
   });
 
   renderTopics();
+  renderLab();
   renderStats();
   // Refresh when returning via the back button (bfcache).
-  window.addEventListener('pageshow', function (e) { if (e.persisted) { renderTopics(); renderStats(); } });
+  window.addEventListener('pageshow', function (e) { if (e.persisted) { renderTopics(); renderLab(); renderStats(); } });
 })();

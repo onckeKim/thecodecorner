@@ -6,7 +6,7 @@
 .logo{font:600 1.15rem var(--font-heading);letter-spacing:-.02em;white-space:nowrap}.logo b{color:var(--accent)}
 .site-nav{display:flex;gap:.25rem;align-items:center}
 .header-actions{display:flex;align-items:center;gap:.5rem}
-.site-nav a{font:500 .9rem var(--font-body);color:var(--text-muted);padding:.55rem .8rem;border-radius:var(--radius-sm);transition:color var(--t-fast) ease,background-color var(--t-fast) ease}
+.site-nav a{white-space:nowrap;font:500 .9rem var(--font-body);color:var(--text-muted);padding:.55rem .8rem;border-radius:var(--radius-sm);transition:color var(--t-fast) ease,background-color var(--t-fast) ease}
 .site-nav a:hover{color:var(--text);background:var(--bg-alt)}
 .site-nav a[aria-current=page]{color:var(--accent);background:var(--accent-soft)}
 
@@ -63,14 +63,78 @@ a.topic-card:focus-visible{border-radius:var(--radius)}
 .review .ok b{background:var(--success-soft);color:var(--success)}
 .review .no b{background:var(--error-soft);color:var(--error)}
 
+/* Utilities */
+[hidden]{display:none!important}
+.visually-hidden{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+kbd{font:500 .72rem var(--font-mono);padding:.05rem .35rem;border:1px solid var(--border-strong);border-bottom-width:2px;border-radius:5px;background:var(--surface);color:var(--text-muted)}
+
+/* Home: SQL Lab promo */
+.lab-promo{display:grid;gap:2rem;align-items:center;grid-template-columns:1fr;padding:clamp(1.5rem,4vw,2.5rem);border-top:3px solid var(--tc)}
+.lab-promo h2{margin:.5rem 0 .6rem}
+.lab-promo p{color:var(--text-muted);margin-bottom:1.5rem;max-width:52ch}
+.lab-promo__code{margin:0;font-size:.82rem}
+@media (min-width:900px){.lab-promo{grid-template-columns:1fr 1.1fr}}
+
+/* SQL Lab */
+.lab-section{padding-top:clamp(2rem,5vw,3.5rem)}
+.lab-title{font-size:clamp(1.75rem,1.3rem + 2vw,2.5rem);margin:.5rem 0 .4rem}
+.lab{display:grid;gap:1.5rem;align-items:start}
+@media (min-width:900px){.lab{grid-template-columns:270px minmax(0,1fr)}.lab-nav{position:sticky;top:88px}}
+.lab-list{list-style:none;margin:0;padding:0;display:grid;gap:.25rem}
+.lab-item{display:flex;align-items:center;gap:.65rem;padding:.55rem .65rem;border-radius:var(--radius-sm);border:1px solid transparent;color:var(--text-muted);font-size:.9rem;transition:background-color var(--t-fast) ease,color var(--t-fast) ease,border-color var(--t-fast) ease}
+.lab-item:hover{background:var(--bg-alt);color:var(--text)}
+.lab-item[aria-current=step]{background:var(--accent-soft);border-color:var(--accent-ring);color:var(--text)}
+.lab-item__num{flex:none;display:grid;place-items:center;width:26px;height:26px;border-radius:7px;background:var(--bg-alt);font:600 .72rem var(--font-mono);color:var(--text-subtle)}
+.lab-item.is-solved .lab-item__num{background:var(--success-soft);color:var(--success)}
+.lab-item[aria-current=step] .lab-item__num{background:var(--accent);color:var(--on-accent)}
+.lab-item__title{flex:1;min-width:0}
+.lab-item .level{padding:.15rem .4rem;font-size:.65rem}
+@media (max-width:899px){
+  .lab-list{display:flex;flex-wrap:wrap;gap:.4rem}
+  .lab-item{padding:.3rem;border-color:var(--border)}
+  .lab-item__title,.lab-item .level{display:none}
+}
+.lab-ex-title{font-size:clamp(1.25rem,1.1rem + .6vw,1.5rem);margin-bottom:.6rem}
+.lab-prompt{color:var(--text-muted);margin-bottom:1.25rem}
+.lab-prompt b{color:var(--text);font-weight:600}
+.lab-actions{margin:1rem 0 1.25rem}
+.lab-next{margin-left:.5rem;min-height:36px;padding:.4rem .85rem;vertical-align:middle}
+.lab-footer{display:flex;flex-wrap:wrap;gap:1.25rem;margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--border);font:500 .8rem var(--font-mono);color:var(--text-subtle)}
+#results:not(:empty){display:grid;gap:1.25rem}
+.result-head{display:flex;justify-content:space-between;font:500 .78rem var(--font-mono);color:var(--text-muted);margin-bottom:.45rem;text-transform:uppercase;letter-spacing:.05em}
+.result-empty{font-size:.85rem;margin-top:.4rem}
+.table-wrap{max-height:420px;overflow:auto;background:var(--surface)}
+table.data th{position:sticky;top:0}
+table.data td.num{text-align:right;font-variant-numeric:tabular-nums}
+table.data td.null{color:var(--text-subtle);font-style:italic}
+.expected .table-wrap{border-style:dashed}
+.schema{border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:1rem;background:var(--bg-alt)}
+.schema summary{cursor:pointer;padding:.7rem 1rem;font:600 .88rem var(--font-body);list-style-position:inside}
+.schema summary .muted{font-weight:400}
+.schema__body{display:grid;gap:.75rem;grid-template-columns:repeat(auto-fill,minmax(min(100%,190px),1fr));padding:0 1rem 1rem}
+.schema__table{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.7rem .8rem;font:400 .78rem var(--font-mono)}
+.schema__name{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.4rem}
+.schema__name b{color:var(--tc,var(--accent));font-size:.85rem}
+.schema__name span{color:var(--text-subtle);font-size:.7rem}
+.schema__table ul{list-style:none;margin:0 0 .5rem;padding:0;display:grid;gap:.15rem}
+.schema__table li{display:flex;justify-content:space-between;gap:.5rem;color:var(--text)}
+.schema__table li span:last-child{color:var(--text-subtle)}
+.schema__table em{font-style:normal;font-size:.62rem;color:var(--warn);margin-left:.2rem}
+.schema__peek{font-size:.72rem;color:var(--text-muted)}
+textarea.editor{min-height:180px}
+textarea.editor:disabled{opacity:.7}
+
 /* Footer */
 .site-footer{border-top:1px solid var(--border);padding-block:2rem;color:var(--text-subtle);font:.8rem var(--font-mono)}
+.site-footer a{text-decoration:underline;text-underline-offset:3px}.site-footer a:hover{color:var(--accent)}
 .site-footer .container{display:flex;flex-wrap:wrap;justify-content:space-between;gap:1rem}
 .linkish{background:none;border:0;padding:0;font:inherit;color:inherit;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
 .linkish:hover{color:var(--accent)}
 
 @media (max-width:520px){
   .site-nav a{padding:.5rem .6rem;font-size:.85rem}
-  .site-nav .nav-home{display:none}
+  .site-nav .nav-home,.site-nav .nav-topics{display:none}
+  .logo{font-size:1.02rem}
+  .site-header .container{gap:.5rem}
   .kbd-hint{display:none}
 }

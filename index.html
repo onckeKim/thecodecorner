@@ -20,8 +20,9 @@
     <div class="header-actions">
       <nav class="site-nav" aria-label="Main">
         <a class="nav-home" href="index.html">Home</a>
-        <a href="index.html#topics">Topics</a>
+        <a class="nav-topics" href="index.html#topics">Topics</a>
         <a href="practice.html">Practice</a>
+        <a href="sql-lab.html">SQL Lab</a>
       </nav>
       <button type="button" class="theme-toggle" aria-label="Toggle dark mode"></button>
     </div>
@@ -53,6 +54,30 @@
 
   <section class="section">
     <div class="container">
+      <div class="lab-promo card" data-topic="sql">
+        <div class="lab-promo__text">
+          <span class="eyebrow">New · SQL Lab</span>
+          <h2>Write real queries, get them checked</h2>
+          <p>A small shop database runs right in your browser. Write SQL, run it, and see whether your result matches the expected one: from simple filters to joins, grouping and window functions.</p>
+          <div class="progress-label"><span>Exercises</span><span id="lab-progress-text">0 / 0 solved</span></div>
+          <div class="progress" style="margin-bottom:1.5rem"><span id="lab-progress-bar" style="--value:0%"></span></div>
+          <a class="btn btn--primary" href="sql-lab.html">Open the SQL Lab</a>
+        </div>
+        <pre class="code lab-promo__code" aria-hidden="true"><span class="code__bar"><i></i><i></i><i></i>&nbsp;lab.sql</span><span class="k">SELECT</span> c.name,
+       <span class="f">SUM</span>(oi.quantity * oi.unit_price) <span class="k">AS</span> revenue
+<span class="k">FROM</span> customers c
+<span class="k">JOIN</span> orders o <span class="k">ON</span> o.customer_id = c.id
+<span class="k">JOIN</span> order_items oi <span class="k">ON</span> oi.order_id = o.id
+<span class="k">WHERE</span> o.status = <span class="s">'shipped'</span>
+<span class="k">GROUP BY</span> c.id, c.name
+<span class="k">ORDER BY</span> revenue <span class="k">DESC</span>
+<span class="k">LIMIT</span> <span class="n">3</span>;</pre>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="container">
       <div class="section-head">
         <span class="eyebrow">Your progress</span>
         <h2>How you’re doing</h2>
@@ -66,7 +91,7 @@
     </div>
   </section>
 
-  <section class="section section--alt">
+  <section class="section">
     <div class="container">
       <div class="section-head">
         <span class="eyebrow">How it works</span>
@@ -89,6 +114,7 @@
 </footer>
 
 <script src="assets/js/questions.js"></script>
+<script src="assets/js/sql-lab-data.js"></script>
 <script src="assets/js/common.js"></script>
 <script src="assets/js/home.js"></script>
 </body>

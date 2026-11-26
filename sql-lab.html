@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<script>try{var t=localStorage.getItem('tcc:theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<title>SQL Lab – The Code Corner</title>
+<meta name="description" content="Write real SQL against a sample database in your browser and get your query checked instantly.">
+<link rel="preload" href="design/fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="design/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="design/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="design/tokens.css">
+<link rel="stylesheet" href="design/components.css">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container">
+    <a class="logo" href="index.html">The Code<b>Corner</b></a>
+    <div class="header-actions">
+      <nav class="site-nav" aria-label="Main">
+        <a class="nav-home" href="index.html">Home</a>
+        <a class="nav-topics" href="index.html#topics">Topics</a>
+        <a href="practice.html">Practice</a>
+        <a href="sql-lab.html">SQL Lab</a>
+      </nav>
+      <button type="button" class="theme-toggle" aria-label="Toggle dark mode"></button>
+    </div>
+  </div>
+</header>
+
+<main class="section lab-section">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">SQL Lab</span>
+      <h1 class="lab-title">Write the query yourself</h1>
+      <p>Real SQL running in your browser on a small shop database. Run your query as often as you like, then check it against the expected result.</p>
+    </div>
+
+    <div class="lab" data-topic="sql">
+      <nav class="lab-nav" aria-label="Exercises">
+        <div class="progress-label"><span>Exercises</span><span id="lab-count"></span></div>
+        <div class="progress" style="margin-bottom:1rem"><span id="lab-bar" style="--value:0%"></span></div>
+        <ol class="lab-list" id="lab-list"></ol>
+      </nav>
+
+      <div class="lab-main">
+        <article class="question" id="exercise" aria-labelledby="ex-title">
+          <div class="question__head">
+            <span class="tag tag--topic">SQL Lab</span>
+            <span class="level" id="ex-level"></span>
+            <span class="tag" id="ex-solved" hidden><span class="solved-dot" aria-hidden="true"></span>&nbsp;Solved</span>
+            <span class="question__num" id="ex-num"></span>
+          </div>
+          <h2 class="lab-ex-title" id="ex-title" tabindex="-1">Loading…</h2>
+          <p class="lab-prompt" id="ex-prompt"></p>
+
+          <details class="schema" id="schema">
+            <summary>Database schema <span class="muted">· 6 tables</span></summary>
+            <div class="schema__body" id="schema-body"><p class="muted">Loading…</p></div>
+          </details>
+
+          <label class="visually-hidden" for="editor">Your SQL query</label>
+          <textarea class="editor" id="editor" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" disabled></textarea>
+
+          <div class="question__actions lab-actions">
+            <button type="button" class="btn btn--ghost btn--sm" id="run-btn" disabled>Run query</button>
+            <button type="button" class="btn btn--primary btn--sm" id="check-btn" disabled>Check answer</button>
+            <button type="button" class="btn btn--ghost btn--sm" id="hint-btn" disabled>Hint</button>
+            <span class="spacer"></span>
+            <span class="kbd-hint" title="Use ⌘ instead of Ctrl on a Mac"><kbd>Ctrl</kbd> <kbd>Enter</kbd> run · <kbd>Ctrl</kbd> <kbd>Shift</kbd> <kbd>Enter</kbd> check</span>
+          </div>
+
+          <div class="feedback" id="feedback" aria-live="polite"></div>
+
+          <div id="results"></div>
+
+          <div class="lab-footer">
+            <button type="button" class="linkish" id="reset-btn">Reset to starter</button>
+            <button type="button" class="linkish" id="expected-btn">Show expected result</button>
+            <button type="button" class="linkish" id="solution-btn">Show a solution</button>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container"><span>© The Code Corner · SQL runs locally with <a href="https://sql.js.org" rel="noopener">sql.js</a> (SQLite)</span><a href="practice.html?topic=sql">SQL quiz →</a></div>
+</footer>
+
+<script src="assets/js/questions.js"></script>
+<script src="assets/js/sql-lab-data.js"></script>
+<script src="assets/js/common.js"></script>
+<script src="assets/vendor/sql.js/sql-wasm.js"></script>
+<script src="assets/js/sql-lab.js"></script>
+</body>
+</html>

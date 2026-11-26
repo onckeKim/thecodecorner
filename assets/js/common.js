@@ -49,7 +49,18 @@ window.TCC = window.TCC || {};
     return t ? t : { solved: [], attempts: 0, correct: 0 };
   };
 
-  TCC.reset = function () { try { localStorage.removeItem(KEY); } catch (e) {} };
+  /* Ids of the gradable items in a progress bucket (quiz topic or the SQL Lab). */
+  TCC.itemIds = function (k) {
+    var list = k === 'sqllab' ? (TCC.SQL_EXERCISES || []) : (TCC.QUESTIONS[k] || []);
+    return list.map(function (q) { return q.id; });
+  };
+
+  TCC.reset = function () {
+    try {
+      localStorage.removeItem(KEY);
+      Object.keys(localStorage).forEach(function (k) { if (k.indexOf('tcc:lab:draft:') === 0) localStorage.removeItem(k); });
+    } catch (e) {}
+  };
 
   TCC.stats = function () {
     var data = load(), attempts = 0, correct = 0, solved = 0;
@@ -57,7 +68,7 @@ window.TCC = window.TCC || {};
       var t = data.topics[k];
       attempts += t.attempts; correct += t.correct;
       // only count questions that still exist in the bank
-      var ids = (TCC.QUESTIONS[k] || []).map(function (q) { return q.id; });
+      var ids = TCC.itemIds(k);
       solved += t.solved.filter(function (id) { return ids.indexOf(id) !== -1; }).length;
     });
     // Streak: consecutive days ending today (or yesterday, so it isn't lost before you practise today).
