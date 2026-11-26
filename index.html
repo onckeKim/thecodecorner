@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Code Corner – Practise SQL, Power BI, Excel &amp; DAX</title>
+<meta name="description" content="Short, hands-on practice questions with instant feedback for SQL, Power BI, Excel, DAX and data modelling.">
+<link rel="preload" href="design/fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="design/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="design/tokens.css">
+<link rel="stylesheet" href="design/components.css">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container">
+    <a class="logo" href="index.html">The Code<b>Corner</b></a>
+    <nav class="site-nav" aria-label="Main">
+      <a href="index.html">Home</a>
+      <a href="index.html#topics">Topics</a>
+      <a href="practice.html">Practice</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="container hero">
+    <span class="eyebrow">Practice site</span>
+    <h1>Learn by doing. Practise <span class="accent">SQL</span>, Power BI, Excel, DAX &amp; data modelling.</h1>
+    <p>Short, hands-on questions with instant feedback. Pick a topic, choose an answer, read why it’s right, level up.</p>
+    <div class="row">
+      <a class="btn btn--primary" id="start-btn" href="practice.html?topic=sql">Start practising</a>
+      <a class="btn btn--ghost" href="#topics">Browse topics</a>
+    </div>
+  </section>
+
+  <section class="section section--alt" id="topics">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Topics</span>
+        <h2>Choose what to practise</h2>
+        <p>Each topic runs from the basics to the trickier questions. Your progress is saved in this browser.</p>
+      </div>
+      <div class="grid3" id="topic-grid"></div>
+      <noscript><p class="callout callout--hint">The practice questions need JavaScript to run.</p></noscript>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Your progress</span>
+        <h2>How you’re doing</h2>
+        <p id="stats-note">Answer a few questions and your stats will show up here.</p>
+      </div>
+      <div class="grid3" id="stats">
+        <div class="card stat" data-topic="sql"><b id="stat-accuracy">–</b><span>Accuracy</span></div>
+        <div class="card stat" data-topic="powerbi"><b id="stat-streak">0</b><span>Day streak</span></div>
+        <div class="card stat" data-topic="excel"><b id="stat-solved">0</b><span>Solved</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">How it works</span>
+        <h2>Three steps, a few minutes a day</h2>
+      </div>
+      <div class="grid3">
+        <div class="card step"><span class="step__num">1</span><h3>Pick a topic</h3><p>Start with the easy questions or filter straight to the hard ones.</p></div>
+        <div class="card step"><span class="step__num">2</span><h3>Answer &amp; check</h3><p>Read the code, choose an answer and check it. Stuck? Ask for a hint first.</p></div>
+        <div class="card step"><span class="step__num">3</span><h3>Learn the why</h3><p>Every answer comes with a short explanation, so a wrong answer still teaches you something.</p></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <span>© The Code Corner</span>
+    <button class="linkish" id="reset-progress" type="button">Reset my progress</button>
+  </div>
+</footer>
+
+<script src="assets/js/questions.js"></script>
+<script src="assets/js/common.js"></script>
+<script src="assets/js/home.js"></script>
+</body>
+</html>

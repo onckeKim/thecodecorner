@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Practice – The Code Corner</title>
+<meta name="description" content="Practice questions with instant feedback and explanations.">
+<link rel="preload" href="design/fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="design/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="design/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="design/tokens.css">
+<link rel="stylesheet" href="design/components.css">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container">
+    <a class="logo" href="index.html">The Code<b>Corner</b></a>
+    <nav class="site-nav" aria-label="Main">
+      <a href="index.html">Home</a>
+      <a href="index.html#topics">Topics</a>
+      <a href="practice.html">Practice</a>
+    </nav>
+  </div>
+</header>
+
+<main class="section">
+  <div class="container narrow">
+    <div class="practice-top">
+      <nav class="chips" id="topic-chips" aria-label="Topics"></nav>
+      <div class="chips" id="level-chips" role="group" aria-label="Difficulty">
+        <span class="filter-label">Level</span>
+      </div>
+    </div>
+
+    <div id="session-progress">
+      <div class="progress-label"><span id="progress-title"></span><span id="progress-count"></span></div>
+      <div class="progress" style="margin-bottom:1.25rem" role="progressbar" aria-label="Session progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="progress-bar" style="--value:0%"></span></div>
+    </div>
+
+    <div id="quiz" aria-live="polite"></div>
+    <noscript><div class="callout callout--hint">The practice questions need JavaScript to run.</div></noscript>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container"><span>© The Code Corner</span><a href="index.html#topics">All topics →</a></div>
+</footer>
+
+<script src="assets/js/questions.js"></script>
+<script src="assets/js/common.js"></script>
+<script src="assets/js/practice.js"></script>
+</body>
+</html>
