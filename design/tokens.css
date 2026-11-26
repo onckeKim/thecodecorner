@@ -9,6 +9,8 @@
   /* Surfaces & text */
   --bg:#fff; --bg-alt:#f6f7fb; --surface:#fff; --border:#e6e9f0; --border-strong:#d5dae6;
   --text:#0f172a; --text-muted:#5b6478; --text-subtle:#6b7385;
+  --on-accent:#fff; /* text/icons on solid accent or topic fills */
+  --header-bg:rgba(255,255,255,.86);
   /* Feedback (quiz states) */
   --success:#15803d; --success-soft:#ecf8f0; --error:#b91c1c; --error-soft:#fdeeee;
   --warn:#b45309; --warn-soft:#fef6e7;
@@ -32,10 +34,52 @@
   --shadow-lg:0 18px 40px -12px rgba(52,87,213,.18),0 4px 12px rgba(15,23,42,.06);
   --container:1140px; --gutter:clamp(1rem,4vw,2.5rem); --section-y:clamp(3rem,8vw,6rem);
   --ease:cubic-bezier(.22,1,.36,1); --t-fast:180ms; --t:300ms;
+  color-scheme:light;
+}
+
+/* Dark theme. Follows the OS setting unless the page sets data-theme="light" | "dark" on <html>.
+   The two blocks below must stay identical. */
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme=light]){
+    --accent:#7b93ff; --accent-hover:#97abff; --accent-soft:rgba(123,147,255,.14); --accent-ring:rgba(123,147,255,.35);
+    --bg:#0b1020; --bg-alt:#0f1629; --surface:#141c31; --border:#232d47; --border-strong:#313d5c;
+    --text:#e6e9f2; --text-muted:#a6aec3; --text-subtle:#8c95ab;
+    --on-accent:#0b1020; --header-bg:rgba(11,16,32,.82);
+    --success:#4ade80; --success-soft:rgba(74,222,128,.12); --error:#f87171; --error-soft:rgba(248,113,113,.13);
+    --warn:#fbbf24; --warn-soft:rgba(251,191,36,.13);
+    --sql:#7b93ff;     --sql-soft:rgba(123,147,255,.14);
+    --powerbi:#e5a93f; --powerbi-soft:rgba(229,169,63,.14);
+    --excel:#4ade80;   --excel-soft:rgba(74,222,128,.12);
+    --dax:#b794ff;     --dax-soft:rgba(183,148,255,.15);
+    --model:#2dd4bf;   --model-soft:rgba(45,212,191,.12);
+    --code-bg:#070b16; --code-muted:#7d87a0;
+    --shadow-sm:0 1px 2px rgba(0,0,0,.3);
+    --shadow:0 4px 14px rgba(0,0,0,.35),0 1px 3px rgba(0,0,0,.3);
+    --shadow-lg:0 18px 40px -12px rgba(0,0,0,.6),0 0 0 1px rgba(123,147,255,.12);
+    color-scheme:dark;
+  }
+}
+:root[data-theme=dark]{
+  --accent:#7b93ff; --accent-hover:#97abff; --accent-soft:rgba(123,147,255,.14); --accent-ring:rgba(123,147,255,.35);
+  --bg:#0b1020; --bg-alt:#0f1629; --surface:#141c31; --border:#232d47; --border-strong:#313d5c;
+  --text:#e6e9f2; --text-muted:#a6aec3; --text-subtle:#8c95ab;
+  --on-accent:#0b1020; --header-bg:rgba(11,16,32,.82);
+  --success:#4ade80; --success-soft:rgba(74,222,128,.12); --error:#f87171; --error-soft:rgba(248,113,113,.13);
+  --warn:#fbbf24; --warn-soft:rgba(251,191,36,.13);
+  --sql:#7b93ff;     --sql-soft:rgba(123,147,255,.14);
+  --powerbi:#e5a93f; --powerbi-soft:rgba(229,169,63,.14);
+  --excel:#4ade80;   --excel-soft:rgba(74,222,128,.12);
+  --dax:#b794ff;     --dax-soft:rgba(183,148,255,.15);
+  --model:#2dd4bf;   --model-soft:rgba(45,212,191,.12);
+  --code-bg:#070b16; --code-muted:#7d87a0;
+  --shadow-sm:0 1px 2px rgba(0,0,0,.3);
+  --shadow:0 4px 14px rgba(0,0,0,.35),0 1px 3px rgba(0,0,0,.3);
+  --shadow-lg:0 18px 40px -12px rgba(0,0,0,.6),0 0 0 1px rgba(123,147,255,.12);
+  color-scheme:dark;
 }
 *,*::before,*::after{box-sizing:border-box}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
-body{margin:0;font-family:var(--font-body);font-size:clamp(.95rem,.9rem + .25vw,1.0625rem);line-height:1.65;color:var(--text);background:var(--bg);-webkit-font-smoothing:antialiased}
+body{margin:0;transition:background-color var(--t) ease,color var(--t) ease;font-family:var(--font-body);font-size:clamp(.95rem,.9rem + .25vw,1.0625rem);line-height:1.65;color:var(--text);background:var(--bg);-webkit-font-smoothing:antialiased}
 h1,h2,h3,h4{font-family:var(--font-heading);font-weight:600;line-height:1.15;letter-spacing:-.02em;margin:0;text-wrap:balance}
 h1{font-size:clamp(2rem,1.3rem + 3.5vw,3.75rem);letter-spacing:-.03em}
 h2{font-size:clamp(1.6rem,1.2rem + 2vw,2.5rem)}

@@ -1,9 +1,10 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
 <title>The Code Corner – Style Guide</title>
 <link rel="stylesheet" href="tokens.css"><link rel="stylesheet" href="components.css">
 <style>
 .sw{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.9rem}
-.sw div{border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;font:500 .75rem var(--font-mono);background:#fff}
+.sw div{border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;font:500 .75rem var(--font-mono);background:var(--surface)}
 .sw i{display:block;height:56px}.sw span{display:block;padding:.5rem .65rem;color:var(--text-muted)}.sw b{color:var(--text);display:block}
 .grid3{display:grid;gap:1.25rem;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
 .row{display:flex;flex-wrap:wrap;gap:.75rem;align-items:center}
@@ -12,7 +13,8 @@
 .hero{padding-block:clamp(2.5rem,7vw,5rem)}.hero p{max-width:56ch;color:var(--text-muted);margin:1rem 0 1.75rem}
 h2.s{margin-bottom:.4rem}.sub{color:var(--text-muted);margin-bottom:1.75rem}
 </style></head><body>
-<header class="container nav"><a class="logo" href="#">The Code<b>Corner</b></a><span class="tag">style guide v1</span></header>
+<header class="container nav"><a class="logo" href="#">The Code<b>Corner</b></a><div class="row"><span class="tag">style guide v1.1</span><button type="button" class="theme-toggle" id="sg-theme" aria-label="Toggle light / dark">◐</button></div></header>
+<script>document.getElementById('sg-theme').addEventListener('click',function(){var r=document.documentElement,cur=r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');r.setAttribute('data-theme',cur==='dark'?'light':'dark')})</script>
 
 <section class="container hero">
   <span class="eyebrow">Practice site</span>

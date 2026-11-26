@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<script>try{var t=localStorage.getItem('tcc:theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 <title>Practice – The Code Corner</title>
 <meta name="description" content="Practice questions with instant feedback and explanations.">
 <link rel="preload" href="design/fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -16,11 +18,14 @@
 <header class="site-header">
   <div class="container">
     <a class="logo" href="index.html">The Code<b>Corner</b></a>
-    <nav class="site-nav" aria-label="Main">
-      <a href="index.html">Home</a>
-      <a href="index.html#topics">Topics</a>
-      <a href="practice.html">Practice</a>
-    </nav>
+    <div class="header-actions">
+      <nav class="site-nav" aria-label="Main">
+        <a class="nav-home" href="index.html">Home</a>
+        <a href="index.html#topics">Topics</a>
+        <a href="practice.html">Practice</a>
+      </nav>
+      <button type="button" class="theme-toggle" aria-label="Toggle dark mode"></button>
+    </div>
   </div>
 </header>
 

@@ -15,6 +15,10 @@ assets/js/practice.js Quiz engine (keyboard: A–D to pick, H for hint, Enter to
 design/               Design system: tokens.css, components.css, fonts, style-guide.html
 ```
 
+## Dark mode
+
+Dark colours live in `design/tokens.css`. By default the site follows the visitor's system setting. The header toggle saves an explicit choice (`localStorage` key `tcc:theme`), and a small inline script in each page's `<head>` applies it before the first paint so the page doesn't flash. The dark tokens appear twice, once in the `prefers-color-scheme` block and once in the `[data-theme=dark]` block, so keep the two in sync. Text that sits on a solid accent or topic colour uses `var(--on-accent)`, not `#fff`.
+
 ## Run locally
 
 No build step. Serve the folder over HTTP (fonts don't load from `file://`):

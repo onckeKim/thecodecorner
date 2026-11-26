@@ -1,10 +1,11 @@
 /* The Code Corner – page layout. Builds on design/tokens.css + design/components.css */
 
 /* Header / nav */
-.site-header{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.86);backdrop-filter:saturate(1.4) blur(10px);-webkit-backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--border)}
+.site-header{position:sticky;top:0;z-index:10;background:var(--header-bg);backdrop-filter:saturate(1.4) blur(10px);-webkit-backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--border)}
 .site-header .container{display:flex;justify-content:space-between;align-items:center;gap:1rem;min-height:64px}
 .logo{font:600 1.15rem var(--font-heading);letter-spacing:-.02em;white-space:nowrap}.logo b{color:var(--accent)}
-.site-nav{display:flex;gap:.25rem}
+.site-nav{display:flex;gap:.25rem;align-items:center}
+.header-actions{display:flex;align-items:center;gap:.5rem}
 .site-nav a{font:500 .9rem var(--font-body);color:var(--text-muted);padding:.55rem .8rem;border-radius:var(--radius-sm);transition:color var(--t-fast) ease,background-color var(--t-fast) ease}
 .site-nav a:hover{color:var(--text);background:var(--bg-alt)}
 .site-nav a[aria-current=page]{color:var(--accent);background:var(--accent-soft)}
@@ -70,5 +71,6 @@ a.topic-card:focus-visible{border-radius:var(--radius)}
 
 @media (max-width:520px){
   .site-nav a{padding:.5rem .6rem;font-size:.85rem}
+  .site-nav .nav-home{display:none}
   .kbd-hint{display:none}
 }
