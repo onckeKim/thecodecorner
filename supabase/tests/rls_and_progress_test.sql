@@ -157,4 +157,61 @@ update public.lessons set status = 'draft' where slug = 'grouping-and-aggregatio
 select tests.ok((select (public.complete_lesson(id) ->> 'xp_awarded')::int = 15 from public.lessons where slug = 'filtering-data-with-where'), 'admins bypass locks and enrolment for testing');
 commit;
 
+
+-- =====================================================================================
+-- Phase 2: profiles, onboarding & role security
+-- =====================================================================================
+insert into auth.users (id, email, raw_user_meta_data) values
+  ('00000000-0000-0000-0000-0000000000c1', 'carol@example.test', '{"first_name":"Carol","last_name":"Jones"}');
+select tests.ok((select first_name = 'Carol' and last_name = 'Jones' and display_name = 'Carol Jones' and not onboarding_completed
+                 from public.profiles where email = 'carol@example.test'), 'sign-up stores first/last name; display name defaults to full name');
+
+begin;
+set local role anon;
+select tests.ok((select count(*) = 8 from public.learning_goals), 'onboarding goals are readable');
+select tests.ok((select count(*) = 4 from public.experience_levels) and (select count(*) = 4 from public.weekly_learning_targets) and (select count(*) = 6 from public.tools), 'experience, weekly and tool options are readable');
+select tests.ok((select count(*) = 0 from public.learner_preferences), 'anon cannot read preferences');
+select tests.denied($$select public.complete_onboarding()$$, 'anon cannot complete onboarding');
+commit;
+
+begin;
+set local role authenticated;
+set local request.jwt.claims = '{"sub":"00000000-0000-0000-0000-0000000000c1","role":"authenticated"}';
+select public.ensure_profile();
+select public.ensure_profile();
+select tests.ok((select count(*) = 1 from public.profiles) and (select count(*) = 1 from public.user_roles), 'ensure_profile is idempotent (no duplicates)');
+select tests.denied($$update public.profiles set onboarding_completed = true, onboarding_completed_at = now() where id = auth.uid()$$, 'learner cannot mark onboarding complete directly');
+select tests.denied($$select public.complete_onboarding()$$, 'cannot complete onboarding before answering');
+update public.profiles set first_name = 'Caz' where id = auth.uid();
+select tests.ok((select first_name = 'Caz' from public.profiles), 'learner can edit own first name');
+
+insert into public.learner_preferences (user_id) values (auth.uid());
+update public.learner_preferences set learning_goal_id = 'learn-sql' where user_id = auth.uid();
+select tests.denied($$update public.learner_preferences set learning_goal_id = 'not-a-goal' where user_id = auth.uid()$$, 'unknown goal is rejected');
+update public.learner_preferences set experience_level_id = 'beginner' where user_id = auth.uid();
+insert into public.learner_tools (user_id, tool_id) values (auth.uid(), 'excel'), (auth.uid(), 'sql');
+update public.learner_preferences set tools_answered_at = now() where user_id = auth.uid();
+select tests.denied($$select public.complete_onboarding()$$, 'weekly target is still required');
+update public.learner_preferences set weekly_target_id = '3-5-hours' where user_id = auth.uid();
+
+select tests.denied($$insert into public.learner_preferences (user_id) values ('00000000-0000-0000-0000-00000000000a')$$, 'cannot create preferences for another learner');
+select tests.denied($$update public.learner_preferences set learning_goal_id = 'learn-sql' where user_id = '00000000-0000-0000-0000-00000000000a'$$, 'cannot edit another learner''s preferences', true);
+select tests.denied($$insert into public.learner_tools (user_id, tool_id) values ('00000000-0000-0000-0000-00000000000a', 'python')$$, 'cannot add tools for another learner');
+select tests.denied($$update public.learner_preferences set user_id = '00000000-0000-0000-0000-00000000000a' where user_id = auth.uid()$$, 'cannot reassign preferences to another user');
+select tests.denied($$insert into public.learning_goals (id, label) values ('hack', 'Hack')$$, 'learners cannot add onboarding options');
+select tests.denied($$insert into public.user_roles (user_id, role_id) values (auth.uid(), 'admin')$$, 'learner cannot grant themselves admin (Phase 2 re-check)');
+
+select tests.ok((select (public.complete_onboarding() ->> 'enrolment_created')::boolean), 'completing onboarding enrols in Data Analyst');
+select tests.ok((select not (public.complete_onboarding() ->> 'enrolment_created')::boolean), 'completing again does not create a second enrolment');
+select tests.ok((select count(*) = 1 from public.enrolments e join public.learning_paths p on p.id = e.path_id where p.slug = 'data-analyst'), 'exactly one Data Analyst enrolment');
+select tests.ok((select onboarding_completed and onboarding_completed_at is not null from public.profiles), 'profile marked onboarded with timestamp');
+commit;
+
+begin;
+set local role authenticated;
+set local request.jwt.claims = '{"sub":"00000000-0000-0000-0000-00000000000b","role":"authenticated"}';
+select tests.ok((select count(*) = 0 from public.learner_preferences) and (select count(*) = 0 from public.learner_tools), 'Bob cannot see Carol''s onboarding answers');
+select tests.ok((select count(*) = 1 from public.profiles), 'Bob still sees only his own profile');
+commit;
+
 \echo 'ALL RLS & PROGRESS TESTS PASSED'

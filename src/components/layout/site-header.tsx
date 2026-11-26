@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { routes } from "@/lib/routes";
-import { signOut } from "@/server/auth/actions";
+import { SignOutButton } from "@/components/auth/sign-out-button";
 import { getViewer } from "@/server/auth/session";
 import type { Viewer } from "@/types/domain";
 
@@ -30,16 +30,6 @@ function accountLinks(viewer: Viewer): NavItem[] {
   ];
 }
 
-function SignOutButton() {
-  return (
-    <form action={signOut}>
-      <button type="submit" className="nav-link w-full text-left">
-        Sign out
-      </button>
-    </form>
-  );
-}
-
 const MenuIcon = (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
     <path d="M4 7h16M4 12h16M4 17h16" />
@@ -48,12 +38,13 @@ const MenuIcon = (
 
 export async function SiteHeader() {
   const viewer = await getViewer();
-  const nav = viewer ? LEARNER_NAV : PUBLIC_NAV;
+  const needsOnboarding = !!viewer && !viewer.onboardingCompleted && !viewer.isAdmin;
+  const nav = !viewer ? PUBLIC_NAV : needsOnboarding ? [{ href: routes.onboarding, label: "Finish setup" }] : LEARNER_NAV;
 
   return (
     <header className="site-header">
       <div className="site-container flex min-h-16 items-center justify-between gap-3">
-        <Link className="logo" href={viewer ? routes.dashboard : routes.home}>
+        <Link className="logo" href={!viewer ? routes.home : needsOnboarding ? routes.onboarding : routes.dashboard}>
           The Code<b>Corner</b>
         </Link>
 
@@ -86,8 +77,12 @@ export async function SiteHeader() {
                 <NavLinks items={nav} className="grid" />
                 <hr className="my-2 border-line" />
               </nav>
-              <NavLinks items={accountLinks(viewer)} className="grid" />
-              <hr className="my-2 border-line" />
+              {!needsOnboarding && (
+                <>
+                  <NavLinks items={accountLinks(viewer)} className="grid" />
+                  <hr className="my-2 border-line" />
+                </>
+              )}
               <SignOutButton />
             </MenuPanel>
           ) : (
@@ -95,12 +90,12 @@ export async function SiteHeader() {
               <Link className="btn btn--ghost btn--sm hidden sm:inline-flex" href={routes.login}>
                 Sign in
               </Link>
-              <Link className="btn btn--primary btn--sm" href={routes.register}>
+              <Link className="btn btn--primary btn--sm hidden min-[420px]:inline-flex" href={routes.register}>
                 Get started
               </Link>
               <MenuPanel label="Open navigation" trigger={MenuIcon} className="md:hidden">
                 <nav aria-label="Mobile">
-                  <NavLinks items={[...nav, { href: routes.login, label: "Sign in" }]} className="grid" />
+                  <NavLinks items={[...nav, { href: routes.login, label: "Sign in" }, { href: routes.register, label: "Create account" }]} className="grid" />
                 </nav>
               </MenuPanel>
             </>

@@ -4,12 +4,12 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { PageHeader } from "@/components/ui/page-header";
 import { formatDate } from "@/lib/utils";
 import { getAchievements } from "@/server/achievements/service";
-import { requireViewer } from "@/server/auth/session";
+import { requireOnboardedViewer } from "@/server/auth/session";
 
 export const metadata: Metadata = { title: "Achievements" };
 
 export default async function AchievementsPage() {
-  const viewer = await requireViewer();
+  const viewer = await requireOnboardedViewer();
   const achievements = await getAchievements(viewer.id);
   const earned = achievements.filter((a) => a.earnedAt).length;
 

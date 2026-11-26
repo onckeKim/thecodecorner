@@ -9,15 +9,18 @@ import { safeNextPath } from "@/lib/routes";
 export const metadata: Metadata = { title: "Sign in" };
 
 const ERRORS: Record<string, string> = {
-  link_invalid: "That confirmation link is invalid or has expired. Please sign in or request a new link.",
+  link_invalid: "That link is invalid or has already been used. Sign in below, or request a new link.",
+  link_expired: "That confirmation link has expired or has already been used. If you’ve already confirmed your email, just sign in below. Otherwise sign in to get a new link.",
+  reset_link_invalid: "That password reset link is invalid or has already been used. Request a new one below.",
+  reset_link_expired: "That password reset link has expired. Request a new one below.",
   not_configured: "Sign-in isn’t available because the site isn’t connected to Supabase.",
 };
 
-type Props = { searchParams: Promise<{ next?: string; error?: string }> };
+type Props = { searchParams: Promise<{ next?: string; error?: string; reset?: string; signed_out?: string; email?: string }> };
 
 export default async function LoginPage({ searchParams }: Props) {
-  const { next, error } = await searchParams;
-  const safeNext = next ? safeNextPath(next) : undefined;
+  const { next, error, reset, signed_out: signedOut, email } = await searchParams;
+  const safeNext = next ? safeNextPath(next, "") || undefined : undefined;
   return (
     <div className="card grid gap-6 p-[clamp(1.5rem,4vw,2.25rem)]">
       <div>
@@ -25,8 +28,21 @@ export default async function LoginPage({ searchParams }: Props) {
         <h1 className="mt-2 text-3xl">Sign in</h1>
       </div>
       {!isSupabaseConfigured() && <NotConfigured />}
-      {error && <Callout variant="error" role="alert">{ERRORS[error] ?? "Something went wrong. Please try again."}</Callout>}
-      <LoginForm next={safeNext} />
+      {reset === "success" && <Callout variant="success" title="Password updated." role="status">Sign in with your new password.</Callout>}
+      {signedOut && <Callout variant="hint" role="status">You’ve been signed out.</Callout>}
+      {safeNext && !error && <Callout variant="hint">Please sign in to continue.</Callout>}
+      {error && (
+        <Callout variant="error" role="alert">
+          {ERRORS[error] ?? "Something went wrong. Please try again."}
+          {error.startsWith("reset_") && (
+            <>
+              {" "}
+              <a className="link" href="/forgot-password">Request a new reset link</a>
+            </>
+          )}
+        </Callout>
+      )}
+      <LoginForm next={safeNext} defaultEmail={email} />
     </div>
   );
 }

@@ -6,12 +6,12 @@ import { PageHeader } from "@/components/ui/page-header";
 import { routes } from "@/lib/routes";
 import { formatDate } from "@/lib/utils";
 import { getCertificates } from "@/server/achievements/service";
-import { requireViewer } from "@/server/auth/session";
+import { requireOnboardedViewer } from "@/server/auth/session";
 
 export const metadata: Metadata = { title: "Certificates" };
 
 export default async function CertificatesPage() {
-  const viewer = await requireViewer();
+  const viewer = await requireOnboardedViewer();
   const certificates = await getCertificates(viewer.id);
   return (
     <div className="site-container py-12">

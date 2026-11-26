@@ -3,6 +3,8 @@ import { z } from "zod";
 const emptyToNull = (v: unknown) => (typeof v === "string" && v.trim() === "" ? null : v);
 
 export const profileSchema = z.object({
+  firstName: z.string().trim().min(1, "Enter your first name.").max(60, "Keep it under 60 characters."),
+  lastName: z.string().trim().min(1, "Enter your last name.").max(60, "Keep it under 60 characters."),
   displayName: z.string().trim().min(1, "Enter a display name.").max(80, "Keep it under 80 characters."),
   username: z.preprocess(
     emptyToNull,
@@ -24,4 +26,7 @@ export const profileSchema = z.object({
   }, "Choose a valid time zone."),
 });
 
-export type ProfileField = "displayName" | "username" | "bio" | "timezone";
+export type ProfileField = "firstName" | "lastName" | "displayName" | "username" | "bio" | "timezone";
+
+export const preferencesSchema = z.object({ goal: z.string().min(1, "Choose a goal."), weekly: z.string().min(1, "Choose a weekly target.") });
+export type PreferencesField = "goal" | "weekly";

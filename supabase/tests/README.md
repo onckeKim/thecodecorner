@@ -1,7 +1,7 @@
 # Database tests
 
 `rls_and_progress_test.sql` checks the security and business rules of the migration with
-three simulated users (two learners and an admin) plus anonymous access. It runs **60 checks**,
+simulated learners and an admin plus anonymous access. It runs **83 checks**,
 including that:
 
 - learners can't read each other's data, grant themselves XP/achievements/admin, or write
@@ -9,7 +9,10 @@ including that:
 - `complete_lesson()` requires enrolment, awards XP once, updates streaks, course progress
   and achievements;
 - prerequisites lock later courses until earlier ones are complete (and admins bypass them);
-- drafts are hidden, answer keys are admin-only, and storage folders are per-user.
+- drafts are hidden, answer keys are admin-only, and storage folders are per-user;
+- (Phase 2) profiles are created once, onboarding can only be completed via `complete_onboarding()`
+  with every answer present, it enrols in Data Analyst exactly once, and learners can't read or edit
+  each other's onboarding answers or grant themselves admin.
 
 ## Running
 

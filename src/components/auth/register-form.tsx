@@ -1,26 +1,35 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState } from "react";
+import { useActionState, useRef } from "react";
 
-import { Callout } from "@/components/ui/callout";
+import { FormMessage } from "@/components/forms/form-message";
+import { PasswordField } from "@/components/forms/password-field";
+import { TextField } from "@/components/forms/text-field";
+import { useFocusFirstError } from "@/components/forms/use-focus-first-error";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { routes } from "@/lib/routes";
 import { signUp } from "@/server/auth/actions";
 import type { SignUpField } from "@/server/auth/schemas";
 import type { FormState } from "@/types/domain";
 
+import { ResendConfirmationForm } from "./resend-confirmation-form";
+
 const initial: FormState<SignUpField> = { status: "idle" };
 
 export function RegisterForm({ next }: { next?: string }) {
   const [state, action] = useActionState(signUp, initial);
+  const formRef = useRef<HTMLFormElement>(null);
+  useFocusFirstError(formRef, state);
   const err = state.fieldErrors ?? {};
+  const v = state.values ?? {};
   const loginHref = next ? `${routes.login}?next=${encodeURIComponent(next)}` : routes.login;
 
   if (state.status === "success") {
     return (
       <div className="grid gap-5">
-        <Callout variant="success" title="Almost there!" role="status">{state.message}</Callout>
+        <FormMessage state={state} successTitle="Check your inbox." />
+        <ResendConfirmationForm email={v.email ?? ""} />
         <p className="text-sm text-muted">
           Already confirmed? <Link className="link" href={loginHref}>Sign in</Link>
         </p>
@@ -28,24 +37,17 @@ export function RegisterForm({ next }: { next?: string }) {
     );
   }
 
-  const field = (name: SignUpField, label: string, props: React.InputHTMLAttributes<HTMLInputElement>, hint?: string) => (
-    <div className="field">
-      <label htmlFor={name}>{label}</label>
-      <input id={name} name={name} className="input" aria-invalid={!!err[name]} aria-describedby={`${name}-msg`} {...props} />
-      {(err[name] || hint) && (
-        <span id={`${name}-msg`} className={err[name] ? "field-error" : "hint"}>{err[name] ?? hint}</span>
-      )}
-    </div>
-  );
-
   return (
-    <form action={action} className="grid gap-5" noValidate>
-      {state.status === "error" && state.message && <Callout variant="error" role="alert">{state.message}</Callout>}
+    <form ref={formRef} action={action} className="grid gap-5" noValidate>
+      <FormMessage state={state} />
       <input type="hidden" name="next" value={next ?? ""} />
-      {field("displayName", "Your name", { autoComplete: "name", required: true, maxLength: 80 })}
-      {field("email", "Email", { type: "email", autoComplete: "email", required: true })}
-      {field("password", "Password", { type: "password", autoComplete: "new-password", required: true, minLength: 8 }, "At least 8 characters, with a letter and a number.")}
-      {field("confirmPassword", "Confirm password", { type: "password", autoComplete: "new-password", required: true })}
+      <div className="grid gap-5 sm:grid-cols-2">
+        <TextField name="firstName" label="First name" autoComplete="given-name" required maxLength={60} defaultValue={v.firstName} error={err.firstName} />
+        <TextField name="lastName" label="Last name" autoComplete="family-name" required maxLength={60} defaultValue={v.lastName} error={err.lastName} />
+      </div>
+      <TextField name="email" label="Email" type="email" autoComplete="email" required defaultValue={v.email} error={err.email} />
+      <PasswordField name="password" label="Password" autoComplete="new-password" error={err.password} showRules />
+      <PasswordField name="confirmPassword" label="Confirm password" autoComplete="new-password" error={err.confirmPassword} />
       <SubmitButton className="w-full" pendingLabel="Creating account…">Create account</SubmitButton>
       <p className="text-center text-sm text-muted">
         Already have an account? <Link className="link" href={loginHref}>Sign in</Link>

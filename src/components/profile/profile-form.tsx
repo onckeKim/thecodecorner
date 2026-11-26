@@ -1,8 +1,10 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useRef } from "react";
 
-import { Callout } from "@/components/ui/callout";
+import { useFocusFirstError } from "@/components/forms/use-focus-first-error";
+
+import { FormMessage } from "@/components/forms/form-message";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { updateProfileAction } from "@/server/profile/actions";
 import type { ProfileField } from "@/server/profile/schema";
@@ -13,17 +15,31 @@ const initial: FormState<ProfileField> = { status: "idle" };
 
 export function ProfileForm({ profile, timezones, roles }: { profile: ProfileView; timezones: string[]; roles: string[] }) {
   const [state, action] = useActionState(updateProfileAction, initial);
+  const formRef = useRef<HTMLFormElement>(null);
+  useFocusFirstError(formRef, state);
   const err = state.fieldErrors ?? {};
 
   return (
-    <form action={action} className="grid gap-5" noValidate>
-      {state.status === "success" && <Callout variant="success" role="status">{state.message}</Callout>}
-      {state.status === "error" && state.message && <Callout variant="error" role="alert">{state.message}</Callout>}
+    <form ref={formRef} action={action} className="grid gap-5" noValidate>
+      <FormMessage state={state} />
 
       <div className="field">
         <label htmlFor="email">Email</label>
         <input id="email" className="input" value={profile.email ?? ""} disabled readOnly />
         <span className="hint">Your sign-in email. Role: {roles.join(", ") || "learner"}.</span>
+      </div>
+
+      <div className="grid gap-5 sm:grid-cols-2">
+        <div className="field">
+          <label htmlFor="firstName">First name</label>
+          <input id="firstName" name="firstName" className="input" defaultValue={profile.firstName ?? ""} required maxLength={60} autoComplete="given-name" aria-invalid={!!err.firstName} aria-describedby={err.firstName ? "firstName-error" : undefined} />
+          {err.firstName && <span id="firstName-error" className="field-error">{err.firstName}</span>}
+        </div>
+        <div className="field">
+          <label htmlFor="lastName">Last name</label>
+          <input id="lastName" name="lastName" className="input" defaultValue={profile.lastName ?? ""} required maxLength={60} autoComplete="family-name" aria-invalid={!!err.lastName} aria-describedby={err.lastName ? "lastName-error" : undefined} />
+          {err.lastName && <span id="lastName-error" className="field-error">{err.lastName}</span>}
+        </div>
       </div>
 
       <div className="field">

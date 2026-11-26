@@ -2,7 +2,7 @@ import "server-only";
 
 import { notFound } from "next/navigation";
 
-import { requireViewer } from "@/server/auth/session";
+import { requireOnboardedViewer } from "@/server/auth/session";
 import { getPathOutline } from "@/server/curriculum/service";
 import type { Enrolment, PathOutline, PathProgress, Viewer } from "@/types/domain";
 
@@ -19,7 +19,7 @@ export type LearnerPathContext = {
 
 /** Loads everything a /learn/[pathSlug]/… page needs, or 404s if the path isn't visible. */
 export async function loadLearnerPath(pathSlug: string): Promise<LearnerPathContext> {
-  const viewer = await requireViewer();
+  const viewer = await requireOnboardedViewer();
   const path = await getPathOutline(pathSlug);
   if (!path) notFound();
   const [enrolment, progress] = await Promise.all([getEnrolment(viewer.id, path.id), getPathProgress(viewer, path)]);

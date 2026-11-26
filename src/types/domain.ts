@@ -14,10 +14,13 @@ export type RoleId = "learner" | "admin";
 export type Viewer = {
   id: string;
   email: string | null;
+  firstName: string | null;
+  lastName: string | null;
   displayName: string;
   username: string | null;
   roles: RoleId[];
   isAdmin: boolean;
+  onboardingCompleted: boolean;
 };
 
 // ---------------------------------------------------------------------------
@@ -179,6 +182,10 @@ export type FormState<Field extends string = string> = {
   status: "idle" | "success" | "error";
   message?: string;
   fieldErrors?: Partial<Record<Field, string>>;
+  /** Optional recovery action shown with the message (e.g. "Sign in again"). */
+  link?: { href: string; label: string };
+  /** Non-sensitive submitted values, used to refill the form after an error (never passwords). */
+  values?: Partial<Record<Field, string>>;
 };
 
 export const initialFormState: FormState = { status: "idle" };

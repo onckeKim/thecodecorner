@@ -15,14 +15,21 @@ export async function proxy(request: NextRequest) {
   const { response, userId } = await updateSession(request);
   const { pathname, search } = request.nextUrl;
 
-  if (!userId && isProtectedPath(pathname)) {
+  // Server Action submissions (POST with a Next-Action header) are not redirected: a
+  // redirect response would break the action call. Every action checks the session itself
+  // and returns a "session expired, sign in again" message instead.
+  const isServerAction = request.method === "POST" && request.headers.has("next-action");
+
+  if (!userId && isProtectedPath(pathname) && !isServerAction) {
     const url = request.nextUrl.clone();
     url.pathname = routes.login;
     url.search = `?next=${encodeURIComponent(pathname + search)}`;
     return NextResponse.redirect(url);
   }
 
-  if (userId && (pathname === routes.login || pathname === routes.register)) {
+  // Signed-in users don't need the sign-in / registration pages. The learner layout
+  // then sends anyone who hasn't finished onboarding to /onboarding.
+  if (userId && (pathname === routes.login || pathname === routes.register) && !request.nextUrl.searchParams.has("resend")) {
     const url = request.nextUrl.clone();
     url.pathname = routes.dashboard;
     url.search = "";

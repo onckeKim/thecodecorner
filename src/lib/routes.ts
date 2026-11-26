@@ -3,6 +3,10 @@ export const routes = {
   home: "/",
   login: "/login",
   register: "/register",
+  forgotPassword: "/forgot-password",
+  resetPassword: "/reset-password",
+  onboarding: "/onboarding",
+  onboardingStep: (step: string) => `/onboarding/${step}`,
   learn: "/learn",
   paths: "/paths",
   path: (slug: string) => `/paths/${slug}`,
@@ -20,7 +24,7 @@ export const routes = {
 } as const;
 
 /** Areas that require a signed-in user. /learn itself is public; anything below it is not. */
-const PROTECTED_PREFIXES = ["/dashboard", "/practice", "/projects", "/profile", "/achievements", "/certificates", "/admin"];
+const PROTECTED_PREFIXES = ["/onboarding", "/dashboard", "/practice", "/projects", "/profile", "/achievements", "/certificates", "/admin"];
 
 export function isProtectedPath(pathname: string): boolean {
   if (pathname.startsWith("/learn/")) return true;
@@ -34,6 +38,6 @@ export function isProtectedPath(pathname: string): boolean {
 export function safeNextPath(next: unknown, fallback: string = routes.dashboard): string {
   if (typeof next !== "string") return fallback;
   if (!next.startsWith("/") || next.startsWith("//") || next.startsWith("/\\")) return fallback;
-  if (next.startsWith("/login") || next.startsWith("/register") || next.startsWith("/auth/")) return fallback;
+  if (/^\/(login|register|auth\/|forgot-password|reset-password)/.test(next)) return fallback;
   return next;
 }

@@ -1,10 +1,11 @@
-import { requireViewer } from "@/server/auth/session";
+import { requireOnboardedViewer } from "@/server/auth/session";
 
 /**
- * Every route in this group requires a signed-in user. The proxy already redirects
- * signed-out visitors (with ?next=); this server-side check is the authoritative one.
+ * Every route in this group requires a signed-in learner who has finished onboarding
+ * (administrators are exempt). The proxy already redirects signed-out visitors; this
+ * server-side check is the authoritative one, and each page repeats it for its own data.
  */
 export default async function LearnerLayout({ children }: { children: React.ReactNode }) {
-  await requireViewer();
+  await requireOnboardedViewer();
   return children;
 }

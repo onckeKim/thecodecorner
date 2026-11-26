@@ -9,23 +9,47 @@ import { StatCard } from "@/components/ui/stat-card";
 import { isSupabaseConfigured } from "@/lib/env";
 import { routes } from "@/lib/routes";
 import { formatDate } from "@/lib/utils";
-import { requireViewer } from "@/server/auth/session";
+import { requireOnboardedViewer } from "@/server/auth/session";
 import { listPaths } from "@/server/curriculum/service";
 import { getEnrolledPaths } from "@/server/progress/service";
+import { getLearnerPlan } from "@/server/onboarding/service";
 import { getLearningSummary, getRecentXp } from "@/server/xp/service";
+import { Callout } from "@/components/ui/callout";
 
 export const metadata: Metadata = { title: "Dashboard" };
 
-export default async function DashboardPage() {
-  const viewer = await requireViewer();
+type Props = { searchParams: Promise<{ welcome?: string }> };
+
+export default async function DashboardPage({ searchParams }: Props) {
+  const viewer = await requireOnboardedViewer();
+  const { welcome } = await searchParams;
   if (!isSupabaseConfigured()) return <div className="site-container py-12"><NotConfigured /></div>;
 
-  const [paths, summary, recentXp] = await Promise.all([listPaths(), getLearningSummary(), getRecentXp(viewer.id)]);
+  const [paths, summary, recentXp, plan] = await Promise.all([listPaths(), getLearningSummary(), getRecentXp(viewer.id), getLearnerPlan(viewer.id)]);
   const enrolled = await getEnrolledPaths(viewer, new Map(paths.map((p) => [p.id, p.slug])));
 
   return (
     <div className="site-container py-12">
-      <PageHeader eyebrow="Dashboard" title={`Welcome back, ${viewer.displayName}`} description="Here’s where you are on your learning journey." />
+      <PageHeader
+        eyebrow="Dashboard"
+        title={welcome ? `Welcome, ${viewer.firstName ?? viewer.displayName}!` : `Welcome back, ${viewer.firstName ?? viewer.displayName}`}
+        description="Here’s where you are on your learning journey."
+      />
+
+      {welcome && (
+        <Callout variant="success" title="You’re all set." className="mb-8" role="status">
+          You’re enrolled in the Data Analyst path. Start with the first lesson below whenever you’re ready.
+        </Callout>
+      )}
+
+      {plan.answers.started && (
+        <section aria-label="Your learning plan" className="card mb-8 flex flex-wrap gap-x-8 gap-y-3 py-5">
+          <div><span className="eyebrow block">Goal</span><span className="font-medium">{plan.goal ?? "Not set"}</span></div>
+          <div><span className="eyebrow block">Experience</span><span className="font-medium">{plan.level ?? "Not set"}</span></div>
+          <div><span className="eyebrow block">Weekly target</span><span className="font-medium">{plan.weekly ?? "Not set"}</span></div>
+          <div className="ml-auto self-center"><Link className="link text-sm" href={routes.profile}>Edit preferences</Link></div>
+        </section>
+      )}
 
       <section aria-label="Your stats" className="mb-12 grid grid-cols-2 gap-4 lg:grid-cols-4">
         <StatCard value={summary.totalXp} label="Total XP" />

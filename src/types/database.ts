@@ -36,8 +36,12 @@ export type RoleRow = { id: string; name: string; description: string | null; cr
 export type ProfileRow = Timestamps & {
   id: string;
   email: string | null;
+  first_name: string | null;
+  last_name: string | null;
   username: string | null;
   display_name: string;
+  onboarding_completed: boolean;
+  onboarding_completed_at: string | null;
   avatar_url: string | null;
   bio: string | null;
   timezone: string;
@@ -285,6 +289,27 @@ export type CertificateRow = {
   created_at: string;
 };
 
+/** Shared shape of the onboarding option tables (learning_goals, experience_levels, tools). */
+export type OptionRow = Timestamps & {
+  id: string;
+  label: string;
+  description: string | null;
+  sort_order: number;
+  is_active: boolean;
+};
+export type ToolRow = Omit<OptionRow, "description">;
+export type WeeklyTargetRow = Omit<OptionRow, "description"> & { min_hours: number; max_hours: number | null };
+
+export type LearnerPreferencesRow = Timestamps & {
+  user_id: string;
+  learning_goal_id: string | null;
+  experience_level_id: string | null;
+  weekly_target_id: string | null;
+  tools_answered_at: string | null;
+};
+
+export type LearnerToolRow = { user_id: string; tool_id: string; created_at: string };
+
 export type LearningSummaryRow = {
   total_xp: number;
   lessons_completed: number;
@@ -322,6 +347,12 @@ export type Database = {
       xp_transactions: TableDef<XpTransactionRow, "user_id" | "amount" | "source_type">;
       user_streaks: TableDef<UserStreakRow, "user_id">;
       certificates: TableDef<CertificateRow, "user_id" | "certificate_number">;
+      learning_goals: TableDef<OptionRow, "id" | "label">;
+      experience_levels: TableDef<OptionRow, "id" | "label">;
+      weekly_learning_targets: TableDef<WeeklyTargetRow, "id" | "label" | "min_hours">;
+      tools: TableDef<ToolRow, "id" | "label">;
+      learner_preferences: TableDef<LearnerPreferencesRow, "user_id">;
+      learner_tools: TableDef<LearnerToolRow, "user_id" | "tool_id">;
     };
     Views: { [_ in never]: never };
     Functions: {
@@ -329,6 +360,8 @@ export type Database = {
       start_lesson: { Args: { p_lesson_id: string }; Returns: ProgressStatus };
       complete_lesson: { Args: { p_lesson_id: string }; Returns: Json };
       get_learning_summary: { Args: Record<PropertyKey, never>; Returns: LearningSummaryRow[] };
+      ensure_profile: { Args: Record<PropertyKey, never>; Returns: undefined };
+      complete_onboarding: { Args: Record<PropertyKey, never>; Returns: Json };
     };
     Enums: {
       content_status: ContentStatus;

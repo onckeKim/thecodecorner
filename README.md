@@ -6,7 +6,7 @@ architecture supports any number of paths.
 
 **Stack:** Next.js 16 (App Router, TypeScript) · Tailwind CSS 4 · Supabase (Postgres, Auth, Storage, RLS) · deployable to Vercel.
 
-**Status:** Phase 1 (platform foundation) is complete. See [What exists today](#what-exists-today).
+**Status:** Phase 1 (platform foundation) and Phase 2 (authentication & learner onboarding) are complete. See [What exists today](#what-exists-today).
 
 ---
 
@@ -26,7 +26,7 @@ Then set up the database ([Supabase setup](#supabase-setup)) and make yourself a
 | `npm run typecheck` | `tsc --noEmit` |
 | `npm run lint` | ESLint (Next.js core-web-vitals + TypeScript rules) |
 | `npm test` | Unit tests for progress/lock logic, content parsing and redirect safety |
-| `npm run test:db` | Migration + seed + 60 RLS/progress checks on a plain PostgreSQL server ([details](supabase/tests/README.md)) |
+| `npm run test:db` | Migrations + seed + 83 RLS/progress/onboarding checks on a plain PostgreSQL server ([details](supabase/tests/README.md)) |
 | `npm run check` | typecheck + lint + build |
 
 ## Environment variables
@@ -48,15 +48,7 @@ On Vercel, add the three variables under Project → Settings → Environment Va
    (Already applied to the `thecodecorner` project, together with the seed.)
 2. **Load the demo curriculum** (development only): run `supabase/seed.sql` in the SQL Editor.
    It's safe to re-run. It switches prerequisites **off** so every course can be tested.
-3. **Auth settings** (Dashboard → Authentication):
-   - URL Configuration → Site URL: your site URL; Redirect URLs: add `http://localhost:3000/auth/confirm`
-     and `https://<your-domain>/auth/confirm`.
-   - Providers → Email: enabled. "Confirm email" can stay on (users get a link that lands on
-     `/auth/confirm`) or be turned off for quicker local testing.
-   - **Email delivery:** Supabase's built-in mailer only sends to your project team's addresses
-     and allows a few emails per hour, so sign-ups from anyone else fail. Before real users
-     register, set up custom SMTP (Authentication → Emails → SMTP settings, e.g. Resend,
-     Postmark or SES), or turn "Confirm email" off while developing.
+3. **Auth settings** (Dashboard → Authentication). See [Authentication setup](#authentication-setup) below.
 4. **Make yourself an admin** after registering through the site:
    ```sql
    insert into public.user_roles (user_id, role_id)
@@ -65,12 +57,48 @@ On Vercel, add the three variables under Project → Settings → Environment Va
 5. When the real curriculum is ready, turn prerequisites back on from **/admin** (or
    `update platform_settings set value = 'true' where key = 'enforce_prerequisites';`).
 
+## Authentication setup
+
+**URL Configuration** (Authentication → URL Configuration)
+- Site URL: your production URL (e.g. `https://thecodecorner.example`), or `http://localhost:3000` while developing.
+- Redirect URLs: add `http://localhost:3000/**` and `https://<your-domain>/**`. Email links come back to
+  `/auth/confirm?next=…`, and the wildcard also allows those query strings.
+
+**Email confirmation** (Authentication → Providers → Email): "Confirm email" is **on** for this project, and the
+app supports it. Learners confirm, then go straight to onboarding. With it off, they go straight to onboarding
+after registering.
+
+**Email delivery:** Supabase's built-in mailer is rate-limited to a handful of emails per hour for the whole
+project. That's fine for testing, not for launch. Set up custom SMTP (Authentication → Emails → SMTP settings;
+e.g. Resend, Postmark, Amazon SES) and raise the email rate limit (Authentication → Rate Limits).
+
+**Email templates (recommended):** the default templates work when the learner opens the link in the same
+browser they registered in. To make links work in *any* browser or device, change the link in these templates
+(Authentication → Emails → Templates):
+- *Confirm signup*: `{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email&next=/onboarding`
+- *Reset password*: `{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=recovery&next=/reset-password`
+
+### Flows
+
+| Flow | Path |
+| --- | --- |
+| Register | `/register` (first name, last name, email, password ×2) → "check your inbox" (or straight to onboarding if confirmation is off). Resend link available. |
+| Confirm email | email link → `/auth/confirm` → profile ensured (idempotent) → `/onboarding` (or dashboard if already onboarded) |
+| Sign in | `/login` → learner not onboarded → `/onboarding`; learner → `/dashboard` (or the page they asked for); admin → `/admin` |
+| Forgot password | `/forgot-password` → same reply whether or not the email exists → email link → `/auth/confirm` → `/reset-password` → new password → **signed out everywhere** → `/login?reset=success` |
+| Sign out | account menu → session ended → `/login?signed_out=1`; protected pages (and the back button) redirect to sign-in |
+| Onboarding | `/onboarding` → welcome → goal → experience → tools → weekly time → enrolled in Data Analyst → `/dashboard?welcome=1`. Answers are saved per step; returning learners resume where they stopped. |
+
+Sessions live in HTTP-only cookies (`@supabase/ssr`), are refreshed by `src/proxy.ts` on each request and
+verified server-side with `auth.getUser()`. Nothing in `localStorage` is trusted for auth.
+
 ## Architecture
 
 ```
 src/
   app/                    Routes only (thin). Data comes from src/server/*
-    (auth)/login|register   Sign-in / registration
+    (auth)/login|register|forgot-password|reset-password   Auth pages
+    onboarding/[step]       Learner onboarding (welcome, goal, experience, tools, time)
     auth/confirm            Email-link landing (PKCE code or token_hash)
     paths/, paths/[slug]    Public catalogue + path overview with enrolment
     learn/                  Public learning hub
@@ -82,7 +110,8 @@ src/
     layout/                 Header, footer, theme toggle, menus
     curriculum/ auth/ profile/ admin/   Feature components
   server/                 Server-only application logic ("services"), one folder per domain
-    auth/                   Session/viewer, requireViewer, assertAdmin, sign-in/up/out actions
+    auth/                   Session/viewer, destination logic, guards, sign-in/up/out + password reset actions
+    onboarding/             Onboarding options, answers, resume state and step actions
     curriculum/             Paths, courses, modules, lessons, projects (reads, RLS-filtered)
     progress/               Enrolment, progress, lock computation, complete-lesson action
     assessment/             Quizzes/exercises (metadata in Phase 1; grading later)
@@ -121,7 +150,12 @@ everywhere. Components use the design classes directly (`btn`, `card`, `tag`, `l
   `project_submissions`.
 - **Learner state:** `enrolments`, `lesson_progress`, `course_progress`, `xp_transactions`,
   `user_streaks`, `achievements`/`user_achievements`, `certificates`.
-- **People:** `profiles` (1:1 with `auth.users`, created by trigger), `roles`, `user_roles`.
+- **People:** `profiles` (1:1 with `auth.users`, created by trigger; first/last name, onboarding status),
+  `roles`, `user_roles`. Roles are never stored on profiles, so profile edits can't change them.
+- **Onboarding:** `learner_preferences` (goal, experience level, weekly target), `learner_tools`, and the option
+  tables `learning_goals`, `experience_levels`, `tools`, `weekly_learning_targets` (add rows to add options).
+  `complete_onboarding()` marks onboarding complete and enrols the learner in the path named by
+  `platform_settings.default_learning_path` (Data Analyst), exactly once.
 - **Settings:** `platform_settings` (`enforce_prerequisites`).
 
 ### Security model
@@ -142,14 +176,15 @@ everywhere. Components use the design classes directly (`btn`, `card`, `tag`, `l
 
 ## What exists today
 
-**Built:** auth (register, sign in/out, email confirmation route, session refresh); public
+**Built:** full auth lifecycle (register, email confirmation, sign in/out, forgotten/reset password,
+expired-session handling); five-step resumable onboarding with Data Analyst enrolment; public
 catalogue and path pages; enrolment; path/course/module/lesson pages with progress, locks,
 prev/next navigation and "mark as complete" (XP, streaks, achievements); dashboard; profile
 editing; achievements and certificates pages; projects (briefs); admin overview,
 prerequisite switch, publish/unpublish for paths/courses/modules/lessons/quizzes/projects,
 and a users list; light/dark theme.
 
-**Next phases:** admin CMS editing, quiz engine, graded exercises / SQL environment,
+**Next phases:** learner dashboard (Phase 3), admin CMS editing, quiz engine, graded exercises / SQL environment,
 project submissions & review, certificate generation. Not planned yet: payments,
 community features.
 
